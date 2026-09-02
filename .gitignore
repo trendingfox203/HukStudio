@@ -48,9 +48,3 @@ next-env.d.ts
 # chat). File vẫn nằm trên máy để code chạy được local, nhưng không đẩy lên
 # git. Khi deploy VPS thật, copy thủ công các file đã mua bản quyền vào
 # đúng đường dẫn tương ứng (fonts/...), ngoài phạm vi git.
-/fonts/SVN-Gilroy/
-/fonts/DFVN CALATHEA.otf
-/fonts/DFVN Desirable Calligraphy.otf
-/fonts/Valencia-Light Regular.ttf
-/fonts/Valencia-Serial-Light RegularItalic.ttf
-/fonts/Blosta-Script.otf
