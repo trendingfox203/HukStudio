@@ -36,6 +36,21 @@ yarn-error.log*
 # vercel
 .vercel
 
+# ảnh upload qua admin — dữ liệu thật, không commit vào git.
+# Trên VPS, thư mục này KHÔNG được xoá khi deploy lại (không chạy git clean).
+/public/uploads/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Font thương mại/không rõ nguồn gốc bản quyền — KHÔNG commit (xem lịch sử
+# chat). File vẫn nằm trên máy để code chạy được local, nhưng không đẩy lên
+# git. Khi deploy VPS thật, copy thủ công các file đã mua bản quyền vào
+# đúng đường dẫn tương ứng (fonts/...), ngoài phạm vi git.
+/fonts/SVN-Gilroy/
+/fonts/DFVN CALATHEA.otf
+/fonts/DFVN Desirable Calligraphy.otf
+/fonts/Valencia-Light Regular.ttf
+/fonts/Valencia-Serial-Light RegularItalic.ttf
+/fonts/Blosta-Script.otf

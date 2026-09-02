@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: huk
+      POSTGRES_PASSWORD: huk_dev_password
+      POSTGRES_DB: huk_studio
+    ports:
+      - "5432:5432"
+    volumes:
+      - huk_studio_pgdata:/var/lib/postgresql/data
+
+volumes:
+  huk_studio_pgdata:
