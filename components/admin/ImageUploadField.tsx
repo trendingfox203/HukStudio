@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { UploadIcon } from "@/components/admin/icons";
+import { compressImageForUpload } from "@/lib/client-image-resize";
 
 const RATIO_OPTIONS = [
   { value: "", label: "Giữ nguyên tỉ lệ gốc" },
@@ -46,8 +47,9 @@ export default function ImageUploadField({
   );
   const aspectRatio = ratioChoice === "custom" ? `${customW}:${customH}` : ratioChoice;
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
+  async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const input = e.target;
+    const file = input.files?.[0];
     if (!file) return;
 
     const url = URL.createObjectURL(file);
@@ -60,6 +62,16 @@ export default function ImageUploadField({
         setOrientation(img.naturalHeight > img.naturalWidth ? "portrait" : "landscape");
       };
       img.src = url;
+    }
+
+    // Vercel giới hạn cứng request body 4.5MB (Server Action lẫn API route) —
+    // nén ảnh gốc máy ảnh (20-40MB) ngay trên trình duyệt trước khi form
+    // submit, bằng cách thay file trong chính input này qua DataTransfer.
+    const compressed = await compressImageForUpload(file);
+    if (compressed !== file) {
+      const dt = new DataTransfer();
+      dt.items.add(compressed);
+      input.files = dt.files;
     }
   }
 

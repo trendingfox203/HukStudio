@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { UploadIcon } from "@/components/admin/icons";
+import { compressImageForUpload } from "@/lib/client-image-resize";
 
 type UploadedItem = { url: string; alt: string; storagePath: string; aspectRatio?: string };
 type PendingItem = {
@@ -42,8 +43,9 @@ export default function MultiImageUploadField({
 
   async function uploadFile(id: string, file: File, ratio: string) {
     try {
+      const compressed = await compressImageForUpload(file);
       const body = new FormData();
-      body.set("file", file);
+      body.set("file", compressed);
       body.set("folder", folder);
       if (ratio) body.set("aspectRatio", ratio);
       const res = await fetch("/api/admin/upload", { method: "POST", body });
