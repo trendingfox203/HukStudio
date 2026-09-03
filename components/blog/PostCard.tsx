@@ -7,7 +7,7 @@ export default function PostCard({ post }: { post: ResolvedPost }) {
     <Link href={`/blog/${post.slug}`} className="group flex flex-col gap-4">
       <div className="relative aspect-[3/2] overflow-hidden">
         <Image
-          src={post.coverSrc}
+          src={post.cardSrc}
           alt={post.coverAlt}
           fill
           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"

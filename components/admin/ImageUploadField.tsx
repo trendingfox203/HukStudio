@@ -17,6 +17,7 @@ const RATIO_OPTIONS = [
 
 export default function ImageUploadField({
   name = "file",
+  aspectRatioFieldName = "aspectRatio",
   detectOrientation = false,
   withAspectRatio = false,
   defaultAspectRatio,
@@ -25,6 +26,7 @@ export default function ImageUploadField({
   hint = "JPG, PNG — bấm để chọn file",
 }: {
   name?: string;
+  aspectRatioFieldName?: string;
   detectOrientation?: boolean;
   withAspectRatio?: boolean;
   defaultAspectRatio?: string;
@@ -137,7 +139,7 @@ export default function ImageUploadField({
               </div>
             </div>
           )}
-          <input type="hidden" name="aspectRatio" value={aspectRatio} />
+          <input type="hidden" name={aspectRatioFieldName} value={aspectRatio} />
         </div>
       )}
     </label>

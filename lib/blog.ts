@@ -36,6 +36,7 @@ export type ResolvedPost = {
   introParagraphs: string[];
   coverSrc: string;
   coverAlt: string;
+  cardSrc: string;
   publishedAt: string;
   vendors: ResolvedVendor[];
   blocks: ResolvedBlock[];
@@ -73,6 +74,7 @@ function resolveStaticPost(post: StaticPost): ResolvedPost {
     introParagraphs: post.introParagraphs,
     coverSrc: unsplash(post.coverImageId, 1200),
     coverAlt: post.coverAlt,
+    cardSrc: unsplash(post.coverImageId, 900),
     publishedAt: post.publishedAt,
     vendors: [],
     blocks: post.blocks.map(resolveStaticBlock),
@@ -87,6 +89,7 @@ type PostRow = {
   intro_paragraphs: string[];
   cover_url: string | null;
   cover_alt: string;
+  card_image_url: string | null;
   vendors: ResolvedVendor[] | null;
   published_at: string;
 };
@@ -146,7 +149,7 @@ async function getDbPosts(): Promise<ResolvedPost[] | null> {
 
   const client = db();
   const { rows: postRows } = await client.query<PostRow>(
-    `select id, slug, title, excerpt, intro_paragraphs, cover_url, cover_alt, vendors, published_at::text
+    `select id, slug, title, excerpt, intro_paragraphs, cover_url, cover_alt, card_image_url, vendors, published_at::text
      from blog_posts order by published_at desc`,
   );
 
@@ -171,6 +174,7 @@ async function getDbPosts(): Promise<ResolvedPost[] | null> {
     introParagraphs: row.intro_paragraphs ?? [],
     coverSrc: row.cover_url ?? "",
     coverAlt: row.cover_alt,
+    cardSrc: row.card_image_url ?? row.cover_url ?? "",
     publishedAt: row.published_at,
     vendors: row.vendors ?? [],
     blocks: (blocksByPost.get(row.id) ?? []).map(resolveDbBlock),

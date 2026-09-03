@@ -34,6 +34,7 @@ type PostRow = {
   intro_paragraphs: string[];
   vendors: { label: string; value: string }[];
   cover_url: string | null;
+  card_image_url: string | null;
   published_at: string;
 };
 
@@ -78,7 +79,7 @@ export default async function AdminBlogPostPage({ params }: { params: Promise<{ 
 
   const [postResult, blockResult] = await Promise.all([
     client.query<PostRow>(
-      `select id, title, excerpt, intro_paragraphs, vendors, cover_url, published_at::text
+      `select id, title, excerpt, intro_paragraphs, vendors, cover_url, card_image_url, published_at::text
        from blog_posts where id = $1`,
       [id],
     ),
@@ -129,10 +130,42 @@ export default async function AdminBlogPostPage({ params }: { params: Promise<{ 
                   name="cover"
                   required={false}
                   withAspectRatio
-                  label="Ảnh bìa mới"
+                  label="Ảnh bìa mới (trang chi tiết)"
                   hint="Để trống nếu không đổi"
                 />
               </div>
+            </div>
+            <div className="flex flex-col gap-2 border-t border-ink/10 pt-4">
+              <p className="text-xs text-ink/50">
+                Ảnh riêng cho thẻ danh sách (trang /blog và &ldquo;Continue Reading&rdquo;) — để trống thì tự
+                dùng lại ảnh bìa ở trên. Dùng khi ảnh bìa bị crop xấu ở khung ngang của thẻ danh sách.
+              </p>
+              <div className="flex items-center gap-4">
+                {postData.card_image_url && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={postData.card_image_url}
+                    alt="Ảnh thẻ danh sách hiện tại"
+                    className="h-20 w-16 rounded object-cover"
+                  />
+                )}
+                <div className="flex-1">
+                  <ImageUploadField
+                    name="cardImage"
+                    aspectRatioFieldName="cardAspectRatio"
+                    required={false}
+                    withAspectRatio
+                    label="Ảnh thẻ danh sách"
+                    hint="Để trống nếu không đổi"
+                  />
+                </div>
+              </div>
+              {postData.card_image_url && (
+                <label className="flex items-center gap-2 text-sm text-ink/70">
+                  <input type="checkbox" name="removeCardImage" className="h-4 w-4" />
+                  Xoá ảnh riêng này, dùng lại ảnh bìa cho thẻ danh sách
+                </label>
+              )}
             </div>
           </ActionForm>
         </Card>

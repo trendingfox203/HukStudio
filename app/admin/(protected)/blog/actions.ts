@@ -48,6 +48,8 @@ export async function addPost(_prevState: ActionState, formData: FormData): Prom
   const publishedAt = String(formData.get("publishedAt") ?? "").trim();
   const file = formData.get("cover") as File | null;
   const aspectRatio = String(formData.get("aspectRatio") ?? "") || undefined;
+  const cardFile = formData.get("cardImage") as File | null;
+  const cardAspectRatio = String(formData.get("cardAspectRatio") ?? "") || undefined;
 
   const slug = slugify(slugInput || title);
 
@@ -57,9 +59,16 @@ export async function addPost(_prevState: ActionState, formData: FormData): Prom
 
   try {
     const uploaded = await uploadToBucket(file, "blog", undefined, aspectRatio);
+    let cardStoragePath: string | null = null;
+    let cardImageUrl: string | null = null;
+    if (cardFile && cardFile.size > 0) {
+      const uploadedCard = await uploadToBucket(cardFile, "blog", undefined, cardAspectRatio);
+      cardStoragePath = uploadedCard.path;
+      cardImageUrl = uploadedCard.publicUrl;
+    }
     await db().query(
-      `insert into blog_posts (slug, title, excerpt, intro_paragraphs, vendors, cover_storage_path, cover_url, cover_alt, published_at)
-       values ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+      `insert into blog_posts (slug, title, excerpt, intro_paragraphs, vendors, cover_storage_path, cover_url, cover_alt, card_storage_path, card_image_url, published_at)
+       values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
       [
         slug,
         title,
@@ -69,6 +78,8 @@ export async function addPost(_prevState: ActionState, formData: FormData): Prom
         uploaded.path,
         uploaded.publicUrl,
         title,
+        cardStoragePath,
+        cardImageUrl,
         publishedAt || new Date().toISOString().slice(0, 10),
       ],
     );
@@ -92,6 +103,9 @@ export async function updatePost(
   const publishedAt = String(formData.get("publishedAt") ?? "").trim();
   const file = formData.get("cover") as File | null;
   const aspectRatio = String(formData.get("aspectRatio") ?? "") || undefined;
+  const cardFile = formData.get("cardImage") as File | null;
+  const cardAspectRatio = String(formData.get("cardAspectRatio") ?? "") || undefined;
+  const removeCardImage = formData.get("removeCardImage") === "on";
   if (!title) return { error: "Tiêu đề không được để trống." };
 
   const client = db();
@@ -124,6 +138,37 @@ export async function updatePost(
       }
     }
 
+    const { rows: cardRows } = await client.query(
+      "select card_storage_path from blog_posts where id = $1",
+      [id],
+    );
+    const currentCardPath = cardRows[0]?.card_storage_path as string | null;
+    let cardStoragePath: string | null | undefined;
+    let cardImageUrl: string | null | undefined;
+
+    if (cardFile && cardFile.size > 0) {
+      const uploadedCard = await uploadToBucket(cardFile, "blog", undefined, cardAspectRatio);
+      if (currentCardPath) await deleteFromBucket(currentCardPath);
+      cardStoragePath = uploadedCard.path;
+      cardImageUrl = uploadedCard.publicUrl;
+    } else if (removeCardImage && currentCardPath) {
+      await deleteFromBucket(currentCardPath);
+      cardStoragePath = null;
+      cardImageUrl = null;
+    } else if (cardAspectRatio && currentCardPath) {
+      const recropped = await recropInBucket(currentCardPath, "blog", cardAspectRatio);
+      await deleteFromBucket(currentCardPath);
+      cardStoragePath = recropped.path;
+      cardImageUrl = recropped.publicUrl;
+    }
+
+    // card_storage_path/card_image_url: undefined = không đổi (giữ nguyên),
+    // null = xoá hẳn (dùng lại ảnh bìa), string = ảnh mới. Vì Postgres
+    // COALESCE không phân biệt được "không đổi" và "xoá" (cả hai đều có thể
+    // là NULL), quyết định trực tiếp giá trị cuối cùng ở phía JS trước.
+    const finalCardStoragePath = cardStoragePath !== undefined ? cardStoragePath : currentCardPath;
+    const finalCardImageUrl = cardImageUrl !== undefined ? cardImageUrl : cardRows[0]?.card_image_url ?? null;
+
     await client.query(
       `update blog_posts set
          title = $1,
@@ -133,8 +178,10 @@ export async function updatePost(
          cover_alt = $1,
          published_at = coalesce(nullif($5, '')::date, published_at),
          cover_storage_path = coalesce($6, cover_storage_path),
-         cover_url = coalesce($7, cover_url)
-       where id = $8`,
+         cover_url = coalesce($7, cover_url),
+         card_storage_path = $8,
+         card_image_url = $9
+       where id = $10`,
       [
         title,
         excerpt,
@@ -143,6 +190,8 @@ export async function updatePost(
         publishedAt,
         coverStoragePath ?? null,
         coverUrl ?? null,
+        finalCardStoragePath,
+        finalCardImageUrl,
         id,
       ],
     );
@@ -168,10 +217,11 @@ export async function deletePost(id: string) {
   }
 
   const { rows: posts } = await client.query(
-    "select cover_storage_path from blog_posts where id = $1",
+    "select cover_storage_path, card_storage_path from blog_posts where id = $1",
     [id],
   );
   if (posts[0]?.cover_storage_path) await deleteFromBucket(posts[0].cover_storage_path).catch(() => {});
+  if (posts[0]?.card_storage_path) await deleteFromBucket(posts[0].card_storage_path).catch(() => {});
 
   await client.query("delete from blog_posts where id = $1", [id]);
 

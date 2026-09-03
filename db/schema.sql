@@ -71,6 +71,10 @@ create table if not exists blog_posts (
   cover_storage_path text,
   cover_url text,
   cover_alt text not null default '',
+  -- Ảnh riêng cho thẻ danh sách/Continue Reading (tỉ lệ ngang khác ảnh bìa
+  -- dọc ở trang chi tiết) — để trống thì tự dùng lại cover_url.
+  card_storage_path text,
+  card_image_url text,
   vendors jsonb not null default '[]'::jsonb,
   published_at date not null default current_date,
   created_at timestamptz not null default now()
