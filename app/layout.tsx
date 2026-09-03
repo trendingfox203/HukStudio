@@ -80,6 +80,11 @@ const DFVNDesirableCalligraphy = localFont({
   variable: "--font-dfvn-desirable-calligraphy",
   weight: "400",
 });
+const SVNLightitalic = localFont({
+  src: "../fonts/SVN-Gilroy/SVN-Gilroy Light Italic.ttf",
+  variable: "--font-svn-light-italic",
+  weight: "400",
+});
 export async function generateMetadata(): Promise<Metadata> {
   const { siteName } = await getGeneralSettings();
   return {
@@ -100,9 +105,9 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${cormorant.variable} ${jost.variable} ${alexBrush.variable} ${playfair.variable} ${urbanist.variable} ${anton.variable} ${jetbrainsMono.variable} ${ValenciaLight.variable} ${DFVNCalathea.variable} ${BlostaScript.variable} ${losevkaCharon.variable} ${DFVNDesirableCalligraphy.variable} antialiased`}
+      className={`${cormorant.variable} ${jost.variable} ${alexBrush.variable} ${playfair.variable} ${urbanist.variable} ${anton.variable} ${jetbrainsMono.variable} ${ValenciaLight.variable} ${DFVNCalathea.variable} ${BlostaScript.variable} ${losevkaCharon.variable} ${DFVNDesirableCalligraphy.variable} ${SVNLightitalic.variable} antialiased`}
     >
-      <body className="flex min-h-screen flex-col bg-paper font-valencia-light text-ink">
+      <body className="flex min-h-screen flex-col bg-white font-valencia-light text-ink">
         <Nav siteName={settings.siteName} instagramUrl={settings.instagramUrl} />
         <div id="top" />
         <main className="flex-1">{children}</main>

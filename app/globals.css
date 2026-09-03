@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --color-paper: #f7f5f2;
-  --color-ink: #1c1a17;
+  --color-paper: #ffffff;
+  --color-ink: #000000;
   --color-muted: #504e4e;
 }
 
@@ -23,6 +23,7 @@
   --font-blosta-script: var(--font-blosta-script);
   --font-losevka-charon: var(--font-losevka-charon);
   --font-dfvn-desirable-calligraphy: var(--font-dfvn-desirable-calligraphy);
+  --font-svn-light-italic: var(--font-svn-light-italic);
 }
 
 html {

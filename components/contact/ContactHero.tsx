@@ -20,10 +20,10 @@ export default function ContactHero({
       </nav>
 
       <div className="mt-10 flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between lg:gap-24">
-        <div className="flex flex-col gap-10 lg:flex-row lg:items-center lg:gap-16">
+        <div className="flex flex-col gap-10 lg:flex-row lg:items-center lg:gap-15">
           <div className="flex shrink-0 gap-3 sm:gap-4">
             {photos.map((photo, index) => (
-              <div key={index} className="relative aspect-[4/5] w-[110px] sm:w-[150px] lg:w-[170px]">
+              <div key={index} className="relative aspect-[4/5] w-[110px] sm:w-[195px] ">
                 <Image
                   src={photo.url}
                   alt={`HUK, wedding photographer ${index + 1}`}
@@ -35,7 +35,7 @@ export default function ContactHero({
             ))}
           </div>
 
-          <div className="font-gilroy flex max-w-xl text-justify flex-col gap-5 text-base leading-relaxed text-ink">
+          <div className="font-gilroy flex max-w-xl text-left flex-col gap-7 text-sm leading-relaxed text-ink">
             {introParagraphs.map((paragraph, index) => (
               <p className="text-justify" key={index}>
                 {paragraph}

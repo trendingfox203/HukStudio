@@ -7,10 +7,12 @@ const supabaseHostname = process.env.NEXT_PUBLIC_SUPABASE_URL
 const nextConfig: NextConfig = {
   experimental: {
     serverActions: {
-      // Ảnh gốc từ máy ảnh/điện thoại có thể 20-40MB, và một số form admin
-      // upload cùng lúc nhiều ảnh (vd: lưới ảnh Blog tối đa 3 ảnh) — để dư
-      // hạn mức tránh lỗi "Body exceeded" trước khi sharp kịp nén lại.
-      bodySizeLimit: "50mb",
+      // Ảnh gốc từ máy ảnh/điện thoại có thể 20-40MB, và khối lưới ảnh Blog
+      // cho phép chọn nhiều ảnh cùng lúc (không giới hạn số lượng) — để dư
+      // hạn mức tránh lỗi "Unexpected end of form" trước khi sharp kịp nén lại.
+      // Khách xác nhận có lúc tổng dung lượng 1 lần chọn vượt 300MB (nhiều
+      // ảnh gốc máy ảnh cùng lúc) nên để hẳn 1GB cho an toàn.
+      bodySizeLimit: "1gb",
     },
   },
   images: {

@@ -3,7 +3,7 @@ import { unsplash } from "@/lib/images";
 import { posts as staticPosts, type BlogPost as StaticPost, type BlogBlock as StaticBlock } from "@/content/blog";
 
 export type ResolvedCaption = { title?: string; text: string };
-export type ResolvedImageItem = { src: string; alt: string };
+export type ResolvedImageItem = { src: string; alt: string; aspectRatio?: string };
 
 export type ResolvedBlock =
   | { id: string; type: "paragraph"; text: string }
@@ -14,15 +14,19 @@ export type ResolvedBlock =
       src: string;
       alt: string;
       tall?: boolean;
+      aspectRatio?: string;
+      fullWidth?: boolean;
       caption?: ResolvedCaption;
     }
   | {
       id: string;
       type: "images";
-      columns: 2 | 3;
-      items: ResolvedImageItem[];
+      rows: ResolvedImageItem[][];
+      fullWidth?: boolean;
       caption?: ResolvedCaption;
     };
+
+export type ResolvedVendor = { label: string; value: string };
 
 export type ResolvedPost = {
   id: string;
@@ -33,6 +37,7 @@ export type ResolvedPost = {
   coverSrc: string;
   coverAlt: string;
   publishedAt: string;
+  vendors: ResolvedVendor[];
   blocks: ResolvedBlock[];
 };
 
@@ -54,8 +59,7 @@ function resolveStaticBlock(block: StaticBlock, index: number): ResolvedBlock {
   return {
     id,
     type: "images",
-    columns: block.columns,
-    items: block.items.map((item) => ({ src: unsplash(item.imageId, 900), alt: item.alt })),
+    rows: [block.items.map((item) => ({ src: unsplash(item.imageId, 900), alt: item.alt }))],
     caption: block.caption,
   };
 }
@@ -70,6 +74,7 @@ function resolveStaticPost(post: StaticPost): ResolvedPost {
     coverSrc: unsplash(post.coverImageId, 1200),
     coverAlt: post.coverAlt,
     publishedAt: post.publishedAt,
+    vendors: [],
     blocks: post.blocks.map(resolveStaticBlock),
   };
 }
@@ -82,6 +87,7 @@ type PostRow = {
   intro_paragraphs: string[];
   cover_url: string | null;
   cover_alt: string;
+  vendors: ResolvedVendor[] | null;
   published_at: string;
 };
 
@@ -90,8 +96,12 @@ type BlockContent = {
   url?: string;
   alt?: string;
   tall?: boolean;
+  aspectRatio?: string;
   caption?: ResolvedCaption;
-  items?: { url: string; alt: string }[];
+  items?: { url: string; alt: string; aspectRatio?: string }[];
+  columns?: number;
+  rows?: { url: string; alt: string; aspectRatio?: string }[][];
+  fullWidth?: boolean;
 };
 
 type BlockRow = {
@@ -114,15 +124,19 @@ function resolveDbBlock(row: BlockRow): ResolvedBlock {
       src: content.url ?? "",
       alt: content.alt ?? "",
       tall: content.tall,
+      aspectRatio: content.aspectRatio,
+      fullWidth: content.fullWidth,
       caption: content.caption,
     };
   }
-  const items = content.items ?? [];
+  const rows = content.rows ?? [content.items ?? []];
   return {
     id: row.id,
     type: "images",
-    columns: items.length >= 3 ? 3 : 2,
-    items: items.map((item) => ({ src: item.url, alt: item.alt })),
+    rows: rows.map((rowItems) =>
+      rowItems.map((item) => ({ src: item.url, alt: item.alt ?? "", aspectRatio: item.aspectRatio })),
+    ),
+    fullWidth: content.fullWidth,
     caption: content.caption,
   };
 }
@@ -132,7 +146,7 @@ async function getDbPosts(): Promise<ResolvedPost[] | null> {
 
   const client = db();
   const { rows: postRows } = await client.query<PostRow>(
-    `select id, slug, title, excerpt, intro_paragraphs, cover_url, cover_alt, published_at::text
+    `select id, slug, title, excerpt, intro_paragraphs, cover_url, cover_alt, vendors, published_at::text
      from blog_posts order by published_at desc`,
   );
 
@@ -158,6 +172,7 @@ async function getDbPosts(): Promise<ResolvedPost[] | null> {
     coverSrc: row.cover_url ?? "",
     coverAlt: row.cover_alt,
     publishedAt: row.published_at,
+    vendors: row.vendors ?? [],
     blocks: (blocksByPost.get(row.id) ?? []).map(resolveDbBlock),
   }));
 }

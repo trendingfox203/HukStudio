@@ -21,14 +21,14 @@ export default function AboutHeadlineStack({ headlines }: { headlines: AboutHead
         <div key={index} className="flex flex-wrap items-start gap-x-3">
           <h2
             onClick={() => line.tag && toggle(index)}
-            className={`font-heavy text-6xl leading-[0.95] font-normal text-black uppercase transition-opacity sm:text-5xl ${line.tag ? "cursor-pointer hover:opacity-70" : ""
+            className={`font-heavy text-6xl leading-[0.95] font-normal text-black uppercase transition-opacity ${line.tag ? "cursor-pointer hover:opacity-70" : ""
               }`}
           >
             {line.text}
           </h2>
           {line.tag && (
             <span
-              className={`font-mono mt-1 text-xs whitespace-nowrap text-ink/50 transition-opacity duration-300 sm:mt-2 sm:text-sm ${revealed.has(index) ? "opacity-100" : "opacity-0"
+              className={`font-mono -ml-1 mt-1 text-xs whitespace-nowrap text-ink/50 transition-opacity duration-300 sm:mt-2 sm:text-sm ${revealed.has(index) ? "opacity-100" : "opacity-0"
                 }`}
             >
               [{line.tag}]

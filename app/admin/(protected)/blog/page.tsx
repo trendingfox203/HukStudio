@@ -95,7 +95,7 @@ export default async function AdminBlogPage() {
             hint="Mỗi đoạn cách nhau 1 dòng trống."
           />
           <TextInput label="Ngày đăng" name="publishedAt" type="date" />
-          <ImageUploadField name="cover" label="Ảnh bìa" />
+          <ImageUploadField name="cover" withAspectRatio label="Ảnh bìa" />
         </ActionForm>
       </Card>
     </div>

@@ -11,11 +11,13 @@ export default function EditDialog({
   action,
   children,
   triggerClassName = "rounded bg-white/95 p-1.5 text-ink shadow-sm hover:bg-white",
+  size = "md",
 }: {
   title: string;
   action: (prevState: EditState, formData: FormData) => Promise<EditState>;
   children: React.ReactNode;
   triggerClassName?: string;
+  size?: "md" | "lg";
 }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [state, formAction, pending] = useActionState(action, undefined);
@@ -40,7 +42,7 @@ export default function EditDialog({
       <dialog
         ref={dialogRef}
         onClick={(e) => e.stopPropagation()}
-        className="w-[calc(100%-2rem)] max-w-md rounded-lg border border-black/5 bg-white p-6 shadow-lg backdrop:bg-black/50"
+        className={`fixed top-1/2 left-1/2 m-0 w-[calc(100%-2rem)] ${size === "lg" ? "max-w-2xl" : "max-w-md"} -translate-x-1/2 -translate-y-1/2 rounded-lg border border-black/5 bg-white p-6 shadow-lg backdrop:bg-black/50`}
       >
         <form action={formAction} className="flex flex-col gap-4">
           <div className="flex items-center justify-between">

@@ -71,6 +71,7 @@ create table if not exists blog_posts (
   cover_storage_path text,
   cover_url text,
   cover_alt text not null default '',
+  vendors jsonb not null default '[]'::jsonb,
   published_at date not null default current_date,
   created_at timestamptz not null default now()
 );

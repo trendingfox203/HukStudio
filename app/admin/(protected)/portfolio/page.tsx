@@ -249,7 +249,7 @@ export default async function AdminPortfolioPage() {
             Thêm review mới
           </h3>
           <ActionForm action={addReview} submitLabel="Thêm review" pendingLabel="Đang tải lên...">
-            <ImageUploadField />
+            <ImageUploadField required={false} hint="Không bắt buộc — để trống nếu khách không có ảnh đại diện" />
             <TextArea label="Nội dung review" name="quote" required />
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <TextInput label="Tên khách hàng" name="author" required />
