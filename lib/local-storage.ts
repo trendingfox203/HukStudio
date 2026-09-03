@@ -1,8 +1,6 @@
-import { mkdir, readFile, writeFile, unlink } from "fs/promises";
-import path from "path";
+import { put, del, head } from "@vercel/blob";
 import sharp from "sharp";
 
-const UPLOADS_ROOT = path.join(process.cwd(), "public", "uploads");
 const DEFAULT_MAX_DIMENSION = 2200;
 const JPEG_QUALITY = 82;
 
@@ -36,19 +34,20 @@ async function saveToBucket(
   folder: "home" | "portfolio" | "about" | "contact" | "blog",
 ): Promise<{ path: string; publicUrl: string }> {
   const relativePath = `${folder}/${crypto.randomUUID()}.jpg`;
-  const absolutePath = path.join(UPLOADS_ROOT, relativePath);
 
-  await mkdir(path.dirname(absolutePath), { recursive: true });
-  await writeFile(absolutePath, optimized);
+  const blob = await put(relativePath, optimized, {
+    access: "public",
+    contentType: "image/jpeg",
+    addRandomSuffix: false,
+  });
 
-  return { path: relativePath, publicUrl: `/uploads/${relativePath}` };
+  return { path: relativePath, publicUrl: blob.url };
 }
 
 /**
- * Uploaded files live under public/uploads/<folder>/ so Next.js serves them
- * directly at /uploads/<folder>/<file>.jpg — no separate file server needed.
- * On the VPS this directory must survive redeploys (never wiped by `git
- * clean` or a fresh `git pull`) since it is the only copy of these files.
+ * Ảnh upload được lưu trên Vercel Blob (object storage tích hợp sẵn trong
+ * Vercel) — không lưu vào ổ cứng server nữa, để tương thích với Vercel
+ * (serverless, không có ổ cứng bền vững) và tránh phụ thuộc VPS tự host.
  *
  * `aspectRatio` (vd "4:5", "16:9") crop ảnh về đúng tỉ lệ đó (fit: cover,
  * canh theo vùng ảnh "đáng chú ý" nhất) — để trống thì giữ nguyên tỉ lệ gốc.
@@ -76,12 +75,14 @@ export async function recropInBucket(
   aspectRatio: string,
   maxDimension: number = DEFAULT_MAX_DIMENSION,
 ): Promise<{ path: string; publicUrl: string }> {
-  const original = await readFile(path.join(UPLOADS_ROOT, relativePath));
+  const meta = await head(relativePath);
+  const res = await fetch(meta.url);
+  if (!res.ok) throw new Error("Không tải được ảnh gốc từ Vercel Blob để crop lại.");
+  const original = Buffer.from(await res.arrayBuffer());
   const optimized = await processImage(original, maxDimension, aspectRatio);
   return saveToBucket(optimized, folder);
 }
 
 export async function deleteFromBucket(relativePath: string): Promise<void> {
-  const absolutePath = path.join(UPLOADS_ROOT, relativePath);
-  await unlink(absolutePath).catch(() => {});
+  await del(relativePath).catch(() => {});
 }

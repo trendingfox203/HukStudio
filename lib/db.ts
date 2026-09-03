@@ -19,6 +19,12 @@ export function db(): Pool {
 
   if (!global.__pgPool) {
     global.__pgPool = new Pool({ connectionString: process.env.DATABASE_URL });
+    // Một số Postgres quản lý (vd Neon qua pooler) có thể để search_path rỗng
+    // theo mặc định cho role, khiến câu lệnh không ghi rõ schema báo "relation
+    // does not exist" — ép lại đúng schema public cho mọi kết nối mới.
+    global.__pgPool.on("connect", (client) => {
+      client.query("SET search_path TO public").catch(() => {});
+    });
   }
   return global.__pgPool;
 }
