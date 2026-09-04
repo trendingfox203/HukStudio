@@ -85,6 +85,16 @@ const SVNLightitalic = localFont({
   variable: "--font-svn-light-italic",
   weight: "400",
 });
+const SVNBold = localFont({
+  src: "../fonts/SVN-Gilroy/SVN-Gilroy Bold.ttf",
+  variable: "--font-svn-bold",
+  weight: "400",
+});
+const SVNGilroy = localFont({
+  src: "../fonts/SVN-Gilroy/SVN-Gilroy Regular.ttf",
+  variable: "--font-svn-regular",
+  weight: "400",
+});
 export async function generateMetadata(): Promise<Metadata> {
   const { siteName } = await getGeneralSettings();
   return {
@@ -105,7 +115,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${cormorant.variable} ${jost.variable} ${alexBrush.variable} ${playfair.variable} ${urbanist.variable} ${anton.variable} ${jetbrainsMono.variable} ${ValenciaLight.variable} ${DFVNCalathea.variable} ${BlostaScript.variable} ${losevkaCharon.variable} ${DFVNDesirableCalligraphy.variable} ${SVNLightitalic.variable} antialiased`}
+      className={`${cormorant.variable} ${jost.variable} ${alexBrush.variable} ${playfair.variable} ${urbanist.variable} ${anton.variable} ${jetbrainsMono.variable} ${ValenciaLight.variable} ${DFVNCalathea.variable} ${BlostaScript.variable} ${losevkaCharon.variable} ${DFVNDesirableCalligraphy.variable} ${SVNLightitalic.variable} ${SVNBold.variable} ${SVNGilroy.variable} antialiased`}
     >
       <body className="flex min-h-screen flex-col bg-white font-valencia-light text-ink">
         <Nav siteName={settings.siteName} instagramUrl={settings.instagramUrl} />

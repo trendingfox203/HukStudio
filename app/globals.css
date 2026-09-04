@@ -14,7 +14,7 @@
   --font-sans: var(--font-jost);
   --font-script: var(--font-palayfair);
   --font-display: var(--font-playfair);
-  --font-gilroy: var(--font-urbanist);
+  --font-gilroy: var(--font-svn-regular);
   --font-heavy: var(--font-anton);
   --font-mono: var(--font-jetbrains-mono);
   --font-valencia-light: var(--font-valencia-light);
@@ -24,6 +24,7 @@
   --font-losevka-charon: var(--font-losevka-charon);
   --font-dfvn-desirable-calligraphy: var(--font-dfvn-desirable-calligraphy);
   --font-svn-light-italic: var(--font-svn-light-italic);
+  --font-svn-bold: var(--font-svn-bold);
 }
 
 html {

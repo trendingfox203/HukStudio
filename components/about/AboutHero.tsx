@@ -41,7 +41,7 @@ export default function AboutHero({ about }: { about: AboutSettings }) {
 
         <Link
           href={EXPLORE_HREF}
-          className="font-gilroy flex w-fit items-center gap-2 text-4xl font-bold text-black transition-opacity hover:opacity-70 lg:col-start-1 lg:row-start-2 lg:self-end"
+          className="font-svn-bold flex w-fit items-center gap-2 text-4xl font-bold text-black transition-opacity hover:opacity-70 lg:col-start-1 lg:row-start-2 lg:self-end"
         >
           {about.exploreLabel}
           <span aria-hidden="true">&gt;</span>

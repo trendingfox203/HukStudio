@@ -5,9 +5,9 @@ function Caption({ caption }: { caption: ResolvedCaption }) {
   return (
     <div className="mx-auto flex max-w-4xl flex-col gap-1 text-center">
       {caption.title && (
-        <p className="font-serif text-sm text-ink italic">&ldquo;{caption.title}&rdquo;</p>
+        <p className="font-svn-light-italic text-sm text-ink italic">&ldquo;{caption.title}&rdquo;</p>
       )}
-      <p className="font-serif text-sm leading-relaxed text-ink/90 italic">{caption.text}</p>
+      <p className="font-svn-light-italic text-sm leading-relaxed text-ink/90 italic">{caption.text}</p>
     </div>
   );
 }
