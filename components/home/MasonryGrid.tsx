@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Lightbox from "./Lightbox";
+import RevealOnScroll from "@/components/common/RevealOnScroll";
 
 export type MasonryImage = {
   id: string;
@@ -20,22 +21,23 @@ export default function MasonryGrid({ images }: { images: MasonryImage[] }) {
         {images.map((image, index) => {
           const aspect = image.orientation === "portrait" ? "aspect-[3/4]" : "aspect-[4/3]";
           return (
-            <button
-              key={image.id}
-              type="button"
-              onClick={() => setActiveIndex(index)}
-              aria-label={`Xem lớn: ${image.alt}`}
-              className={`relative mb-10 block w-full cursor-zoom-in break-inside-avoid ${aspect}`}
-            >
-              <Image
-                src={image.src}
-                alt={image.alt}
-                fill
-                priority={index === 0}
-                sizes="(min-width: 640px) 50vw, 100vw"
-                className="object-cover"
-              />
-            </button>
+            <RevealOnScroll key={image.id} className="mb-10 block break-inside-avoid">
+              <button
+                type="button"
+                onClick={() => setActiveIndex(index)}
+                aria-label={`Xem lớn: ${image.alt}`}
+                className={`relative block w-full cursor-zoom-in ${aspect}`}
+              >
+                <Image
+                  src={image.src}
+                  alt={image.alt}
+                  fill
+                  priority={index === 0}
+                  sizes="(min-width: 640px) 50vw, 100vw"
+                  className="object-cover"
+                />
+              </button>
+            </RevealOnScroll>
           );
         })}
       </div>

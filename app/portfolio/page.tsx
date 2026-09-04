@@ -64,7 +64,7 @@ async function getPortfolioData() {
   const [{ rows: items }, { rows: reviewRows }, heroResult, { rows: heroImageRows }] =
     await Promise.all([
       client.query(
-        `select id, category, name, public_url, alt_text, external_url
+        `select id, category, name, venue, public_url, alt_text, external_url
          from portfolio_items order by sort_order asc`,
       ),
       client.query(
@@ -83,6 +83,7 @@ async function getPortfolioData() {
     return rows.map((row) => ({
       id: row.id,
       name: row.name,
+      venue: row.venue || undefined,
       imageSrc: row.public_url,
       alt: row.alt_text,
       galleryUrl: row.external_url,

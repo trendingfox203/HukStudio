@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { db, isDbConfigured } from "@/lib/db";
 import DbNotConfigured from "@/components/admin/DbNotConfigured";
 import ImageUploadField from "@/components/admin/ImageUploadField";
+import MultiImageUploadField from "@/components/admin/MultiImageUploadField";
 import PortfolioCategorySection from "@/components/admin/PortfolioCategorySection";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import Card from "@/components/admin/Card";
@@ -15,7 +16,7 @@ import { TextInput, TextArea, SelectInput } from "@/components/admin/FormControl
 import { TrashIcon, GripIcon } from "@/components/admin/icons";
 import {
   updatePortfolioHero,
-  addHeroImage,
+  addHeroImages,
   deleteHeroImage,
   reorderHeroImages,
   addReview,
@@ -31,6 +32,7 @@ type ItemRow = {
   id: string;
   category: PortfolioCategory;
   name: string;
+  venue: string;
   public_url: string;
   external_url: string;
   sort_order: number;
@@ -77,7 +79,7 @@ export default async function AdminPortfolioPage() {
   const [{ rows: items }, { rows: reviews }, heroResult, { rows: heroImages }] =
     await Promise.all([
       client.query<ItemRow>(
-        `select id, category, name, public_url, external_url, sort_order
+        `select id, category, name, venue, public_url, external_url, sort_order
          from portfolio_items order by sort_order asc`,
       ),
       client.query<ReviewRow>(
@@ -164,8 +166,8 @@ export default async function AdminPortfolioPage() {
           />
         )}
         <Card>
-          <ActionForm action={addHeroImage} submitLabel="Thêm ảnh" pendingLabel="Đang tải lên...">
-            <ImageUploadField />
+          <ActionForm action={addHeroImages} submitLabel="Thêm ảnh" pendingLabel="Đang lưu...">
+            <MultiImageUploadField folder="portfolio" label="Ảnh (chọn nhiều)" />
           </ActionForm>
         </Card>
       </section>

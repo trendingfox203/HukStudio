@@ -18,6 +18,7 @@ create table if not exists portfolio_items (
   id uuid primary key default gen_random_uuid(),
   category text not null check (category in ('press', 'galleries', 'editorials')),
   name text not null,
+  venue text not null default '',
   storage_path text not null,
   public_url text not null,
   alt_text text not null default '',

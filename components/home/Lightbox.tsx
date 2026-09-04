@@ -47,14 +47,16 @@ export default function Lightbox({
 
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center px-6 py-16 sm:px-20">
         <div className="pointer-events-auto relative h-full w-full max-w-5xl">
-          <Image
-            src={image.src}
-            alt={image.alt}
-            fill
-            sizes="90vw"
-            className="object-contain"
-            priority
-          />
+          <div className="absolute inset-y-0 left-10 right-10 sm:left-16 sm:right-16">
+            <Image
+              src={image.src}
+              alt={image.alt}
+              fill
+              sizes="90vw"
+              className="object-contain"
+              priority
+            />
+          </div>
 
           <button
             type="button"

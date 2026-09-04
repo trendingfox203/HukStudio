@@ -24,7 +24,7 @@ export default function Nav({
 
   return (
     <header className={`relative z-50 ${bg}`}>
-      <div className="mx-auto flex items-center justify-between px-6 py-8 md:px-20">
+      <div className="mx-auto flex max-w-[1800px] items-center justify-between px-6 py-8 md:px-12 lg:px-20">
         <Link
           href="/"
           className={`flex items-center gap-3 font-dfvn-calathea text-5xl font-normal tracking-wide ${text}`}
@@ -40,12 +40,12 @@ export default function Nav({
           {siteName}
         </Link>
 
-        <nav className="hidden items-center gap-16 md:flex">
+        <nav className="hidden items-center gap-8 lg:flex lg:gap-10 xl:gap-14">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className={`text-lg font-dfvn-calathea font-medium tracking-[0.2em] ${text} uppercase transition-opacity hover:opacity-70 ${pathname === link.href ? "opacity-100" : "opacity-80"
+              className={`text-lg font-dfvn-calathea font-bold tracking-[0.2em]  ${text} uppercase transition-opacity hover:opacity-70 ${pathname === link.href ? "opacity-100" : "opacity-80"
                 }`}
             >
               {link.label}
@@ -65,7 +65,7 @@ export default function Nav({
         <button
           type="button"
           aria-label="Toggle menu"
-          className={`${text} md:hidden`}
+          className={`${text} lg:hidden`}
           onClick={() => setOpen((v) => !v)}
         >
           <MenuIcon open={open} />
@@ -73,7 +73,7 @@ export default function Nav({
       </div>
 
       {open && (
-        <div className={`relative flex flex-col items-center gap-6 ${bg} px-6 py-10 md:hidden`}>
+        <div className={`relative flex flex-col items-center gap-6 ${bg} px-6 py-10 lg:hidden`}>
           {navLinks.map((link) => (
             <Link
               key={link.href}

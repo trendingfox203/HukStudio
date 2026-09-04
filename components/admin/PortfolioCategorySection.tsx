@@ -16,6 +16,7 @@ import {
 type Item = {
   id: string;
   name: string;
+  venue: string;
   public_url: string;
   external_url: string;
 };
@@ -55,6 +56,12 @@ export default function PortfolioCategorySection({
                     <ImageUploadField required={false} hint="Để trống nếu không đổi ảnh" />
                     <TextInput label="Tên project" name="name" defaultValue={item.name} required />
                     <TextInput
+                      label="Venue"
+                      name="venue"
+                      defaultValue={item.venue}
+                      placeholder="Vd: Ritz-Carlton, Bali"
+                    />
+                    <TextInput
                       label="Link ngoài"
                       name="externalUrl"
                       defaultValue={item.external_url}
@@ -78,6 +85,7 @@ export default function PortfolioCategorySection({
           <input type="hidden" name="category" value={category} />
           <ImageUploadField />
           <TextInput label="Tên project" name="name" placeholder="Vd: Felicia & Markus" required />
+          <TextInput label="Venue" name="venue" placeholder="Vd: Ritz-Carlton, Bali" />
           <TextInput
             label="Link ngoài"
             name="externalUrl"

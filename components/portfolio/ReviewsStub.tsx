@@ -20,7 +20,7 @@ function ReviewCard({ review }: { review: DisplayReview }) {
       </span>
 
       <div className="relative flex items-start justify-between gap-4">
-        <p className="font-serif text-xl font-bold tracking-wide text-[#3d3d3d] uppercase">
+        <p className="font-playfair text-xl font-normal tracking-wide text-[#57595B] uppercase">
           {review.platform}
         </p>
         <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full ring-2 ring-[#c9a876]">
@@ -47,7 +47,7 @@ function ReviewCard({ review }: { review: DisplayReview }) {
 export default function ReviewsStub({ reviews }: { reviews: DisplayReview[] }) {
   return (
     <section id="reviews" className="scroll-mt-20 px-6 py-16 sm:px-12">
-      <h2 className="mb-12 text-center font-serif text-3xl font-semibold text-[#3d3d3d] uppercase sm:text-6xl md:text-[78px] lg:text-[82px]">
+      <h2 className="mb-12 text-center font-valencia-light text-3xl font-normal text-[#57595B] uppercase sm:text-6xl md:text-[78px] lg:text-[82px]">
         Reviews
       </h2>
       <div className="mx-auto flex max-w-5xl snap-x gap-8 overflow-x-auto pb-4">

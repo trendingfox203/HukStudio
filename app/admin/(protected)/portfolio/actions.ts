@@ -18,6 +18,7 @@ export async function addPortfolioItem(
 ): Promise<ActionState> {
   const category = String(formData.get("category") ?? "") as PortfolioCategory;
   const name = String(formData.get("name") ?? "").trim();
+  const venue = String(formData.get("venue") ?? "").trim();
   const externalUrl = String(formData.get("externalUrl") ?? "").trim();
   if (!name || !externalUrl) {
     return { error: "Vui lòng nhập đủ ảnh, tên project và link ngoài." };
@@ -30,9 +31,9 @@ export async function addPortfolioItem(
     const sortOrder = await nextSortOrder("portfolio_items", { column: "category", value: category });
 
     await db().query(
-      `insert into portfolio_items (category, name, storage_path, public_url, alt_text, external_url, sort_order)
-       values ($1, $2, $3, $4, $5, $6, $7)`,
-      [category, name, path, publicUrl, name, externalUrl, sortOrder],
+      `insert into portfolio_items (category, name, venue, storage_path, public_url, alt_text, external_url, sort_order)
+       values ($1, $2, $3, $4, $5, $6, $7, $8)`,
+      [category, name, venue, path, publicUrl, name, externalUrl, sortOrder],
     );
   } catch {
     return { error: "Thêm project thất bại. Vui lòng thử lại." };
@@ -48,6 +49,7 @@ export async function updatePortfolioItem(
   formData: FormData,
 ): Promise<EditState> {
   const name = String(formData.get("name") ?? "").trim();
+  const venue = String(formData.get("venue") ?? "").trim();
   const externalUrl = String(formData.get("externalUrl") ?? "").trim();
   if (!name || !externalUrl) return { error: "Tên project và link ngoài không được để trống." };
 
@@ -64,14 +66,14 @@ export async function updatePortfolioItem(
       if (rows[0]?.storage_path) await deleteFromBucket(rows[0].storage_path);
 
       await client.query(
-        `update portfolio_items set name = $1, external_url = $2, alt_text = $1,
-         storage_path = $3, public_url = $4 where id = $5`,
-        [name, externalUrl, path, publicUrl, id],
+        `update portfolio_items set name = $1, venue = $2, external_url = $3, alt_text = $1,
+         storage_path = $4, public_url = $5 where id = $6`,
+        [name, venue, externalUrl, path, publicUrl, id],
       );
     } else {
       await client.query(
-        `update portfolio_items set name = $1, external_url = $2, alt_text = $1 where id = $3`,
-        [name, externalUrl, id],
+        `update portfolio_items set name = $1, venue = $2, external_url = $3, alt_text = $1 where id = $4`,
+        [name, venue, externalUrl, id],
       );
     }
   } catch {
@@ -128,23 +130,36 @@ export async function updatePortfolioHero(
   revalidatePath("/admin/portfolio");
 }
 
-export async function addHeroImage(
+// Ảnh dải carousel Hero đã được upload trước đó qua MultiImageUploadField
+// (giống khối "lưới ảnh" của Blog) — form chỉ mang theo JSON {url, storagePath}
+// của từng ảnh, không phải file thô, nên chọn được nhiều ảnh cùng lúc.
+type HeroImageItem = { url: string; storagePath: string };
+
+function parseHeroImages(values: FormDataEntryValue[]): HeroImageItem[] {
+  return values
+    .filter((v): v is string => typeof v === "string" && v.length > 0)
+    .map((v) => JSON.parse(v) as HeroImageItem);
+}
+
+export async function addHeroImages(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-  try {
-    const uploaded = await resolveUploadedImage(formData, "file", "portfolio");
-    if (!uploaded) return { error: "Vui lòng chọn 1 ảnh." };
-    const { path, publicUrl } = uploaded;
-    const sortOrder = await nextSortOrder("portfolio_hero_images");
+  const items = parseHeroImages(formData.getAll("files"));
+  if (items.length === 0) return { error: "Vui lòng chọn ít nhất 1 ảnh." };
 
-    await db().query(
-      `insert into portfolio_hero_images (storage_path, public_url, alt_text, sort_order)
-       values ($1, $2, '', $3)`,
-      [path, publicUrl, sortOrder],
-    );
+  try {
+    let sortOrder = await nextSortOrder("portfolio_hero_images");
+    for (const item of items) {
+      await db().query(
+        `insert into portfolio_hero_images (storage_path, public_url, alt_text, sort_order)
+         values ($1, $2, '', $3)`,
+        [item.storagePath, item.url, sortOrder],
+      );
+      sortOrder++;
+    }
   } catch {
-    return { error: "Upload ảnh thất bại. Vui lòng thử lại." };
+    return { error: "Thêm ảnh thất bại. Vui lòng thử lại." };
   }
 
   revalidatePath("/portfolio");

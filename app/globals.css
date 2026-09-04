@@ -35,3 +35,9 @@ body {
   background: var(--color-paper);
   color: var(--color-ink);
 }
+.menu-stroke {
+  -webkit-text-stroke: 0.5px rgba(0, 0, 0, 0.8);
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
