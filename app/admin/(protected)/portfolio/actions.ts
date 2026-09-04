@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
-import { uploadToBucket, deleteFromBucket } from "@/lib/local-storage";
+import { deleteFromBucket, resolveUploadedImage } from "@/lib/local-storage";
 import { nextSortOrder, reorderRows } from "@/lib/db-ordering";
 import { upsertSetting } from "@/lib/site-settings";
 import type { ActionState } from "@/components/admin/ActionForm";
@@ -16,16 +16,17 @@ export async function addPortfolioItem(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-  const file = formData.get("file") as File | null;
   const category = String(formData.get("category") ?? "") as PortfolioCategory;
   const name = String(formData.get("name") ?? "").trim();
   const externalUrl = String(formData.get("externalUrl") ?? "").trim();
-  if (!file || file.size === 0 || !name || !externalUrl) {
+  if (!name || !externalUrl) {
     return { error: "Vui lòng nhập đủ ảnh, tên project và link ngoài." };
   }
 
   try {
-    const { path, publicUrl } = await uploadToBucket(file, "portfolio");
+    const uploaded = await resolveUploadedImage(formData, "file", "portfolio");
+    if (!uploaded) return { error: "Vui lòng nhập đủ ảnh, tên project và link ngoài." };
+    const { path, publicUrl } = uploaded;
     const sortOrder = await nextSortOrder("portfolio_items", { column: "category", value: category });
 
     await db().query(
@@ -48,18 +49,18 @@ export async function updatePortfolioItem(
 ): Promise<EditState> {
   const name = String(formData.get("name") ?? "").trim();
   const externalUrl = String(formData.get("externalUrl") ?? "").trim();
-  const file = formData.get("file") as File | null;
   if (!name || !externalUrl) return { error: "Tên project và link ngoài không được để trống." };
 
   const client = db();
 
   try {
-    if (file && file.size > 0) {
+    const uploaded = await resolveUploadedImage(formData, "file", "portfolio");
+    if (uploaded) {
+      const { path, publicUrl } = uploaded;
       const { rows } = await client.query(
         "select storage_path from portfolio_items where id = $1",
         [id],
       );
-      const { path, publicUrl } = await uploadToBucket(file, "portfolio");
       if (rows[0]?.storage_path) await deleteFromBucket(rows[0].storage_path);
 
       await client.query(
@@ -131,11 +132,10 @@ export async function addHeroImage(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-  const file = formData.get("file") as File | null;
-  if (!file || file.size === 0) return { error: "Vui lòng chọn 1 ảnh." };
-
   try {
-    const { path, publicUrl } = await uploadToBucket(file, "portfolio");
+    const uploaded = await resolveUploadedImage(formData, "file", "portfolio");
+    if (!uploaded) return { error: "Vui lòng chọn 1 ảnh." };
+    const { path, publicUrl } = uploaded;
     const sortOrder = await nextSortOrder("portfolio_hero_images");
 
     await db().query(
@@ -179,15 +179,14 @@ export async function addReview(
   const author = String(formData.get("author") ?? "").trim();
   const platform = String(formData.get("platform") ?? "").trim();
   const rating = Math.min(5, Math.max(1, Number(formData.get("rating") ?? 5)));
-  const file = formData.get("file") as File | null;
   if (!quote || !author) return { error: "Vui lòng nhập nội dung review và tên khách hàng." };
 
   let avatarStoragePath: string | null = null;
   let avatarUrl: string | null = null;
 
   try {
-    if (file && file.size > 0) {
-      const uploaded = await uploadToBucket(file, "portfolio", AVATAR_MAX_DIMENSION);
+    const uploaded = await resolveUploadedImage(formData, "file", "portfolio", undefined, AVATAR_MAX_DIMENSION);
+    if (uploaded) {
       avatarStoragePath = uploaded.path;
       avatarUrl = uploaded.publicUrl;
     }
@@ -215,18 +214,17 @@ export async function updateReview(
   const author = String(formData.get("author") ?? "").trim();
   const platform = String(formData.get("platform") ?? "").trim();
   const rating = Math.min(5, Math.max(1, Number(formData.get("rating") ?? 5)));
-  const file = formData.get("file") as File | null;
   if (!quote || !author) return { error: "Nội dung review và tên khách hàng không được để trống." };
 
   const client = db();
 
   try {
-    if (file && file.size > 0) {
+    const uploaded = await resolveUploadedImage(formData, "file", "portfolio", undefined, AVATAR_MAX_DIMENSION);
+    if (uploaded) {
       const { rows } = await client.query(
         "select avatar_storage_path from portfolio_reviews where id = $1",
         [id],
       );
-      const uploaded = await uploadToBucket(file, "portfolio", AVATAR_MAX_DIMENSION);
       if (rows[0]?.avatar_storage_path) await deleteFromBucket(rows[0].avatar_storage_path);
 
       await client.query(

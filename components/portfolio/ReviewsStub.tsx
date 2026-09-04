@@ -11,16 +11,16 @@ export type DisplayReview = {
 
 function ReviewCard({ review }: { review: DisplayReview }) {
   return (
-    <div className="relative w-[85%] shrink-0 snap-start overflow-hidden bg-[#2a2827] px-8 py-10 sm:w-[420px]">
+    <div className="relative w-[85%] shrink-0 snap-start overflow-hidden rounded-sm border border-[#c9a876]/40 bg-white px-8 py-10 shadow-[0_10px_30px_-14px_rgba(0,0,0,0.25)] sm:w-[420px]">
       <span
         aria-hidden
-        className="pointer-events-none absolute -bottom-2 left-4 -z-0 line-clamp-1 max-w-full overflow-hidden font-serif text-7xl font-bold whitespace-nowrap text-white/5 uppercase"
+        className="pointer-events-none absolute -bottom-2 left-4 -z-0 line-clamp-1 max-w-full overflow-hidden font-serif text-7xl font-bold whitespace-nowrap text-black/[0.04] uppercase"
       >
         {review.platform}
       </span>
 
       <div className="relative flex items-start justify-between gap-4">
-        <p className="font-serif text-xl font-bold tracking-wide text-[#c9a876] uppercase">
+        <p className="font-serif text-xl font-bold tracking-wide text-[#3d3d3d] uppercase">
           {review.platform}
         </p>
         <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full ring-2 ring-[#c9a876]">
@@ -29,17 +29,17 @@ function ReviewCard({ review }: { review: DisplayReview }) {
       </div>
 
       <div className="relative mt-3 flex items-center gap-2">
-        <span className="text-sm text-white/90">{review.author}</span>
+        <span className="text-sm text-ink/90">{review.author}</span>
         <span className="text-sm tracking-widest text-[#c9a876]">
           {"★".repeat(review.rating)}
         </span>
       </div>
 
-      <p className="relative mt-6 line-clamp-6 text-sm leading-relaxed text-white/85">
+      <p className="relative mt-6 line-clamp-6 text-sm leading-relaxed text-ink/85">
         {review.quote}
       </p>
 
-      <p className="relative mt-8 text-[10px] tracking-[0.3em] text-white/40 uppercase">Review</p>
+      <p className="relative mt-8 text-[10px] tracking-[0.3em] text-ink/40 uppercase">Review</p>
     </div>
   );
 }

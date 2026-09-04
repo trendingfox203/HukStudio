@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
-import { uploadToBucket, deleteFromBucket, recropInBucket } from "@/lib/local-storage";
+import { deleteFromBucket, recropInBucket, resolveUploadedImage } from "@/lib/local-storage";
 import type { ActionState } from "@/components/admin/ActionForm";
 import type { EditState } from "@/components/admin/EditDialog";
 
@@ -46,23 +46,22 @@ export async function addPost(_prevState: ActionState, formData: FormData): Prom
   const introParagraphs = parseParagraphs(String(formData.get("introParagraphs") ?? ""));
   const vendors = parseVendors(String(formData.get("vendors") ?? ""));
   const publishedAt = String(formData.get("publishedAt") ?? "").trim();
-  const file = formData.get("cover") as File | null;
   const aspectRatio = String(formData.get("aspectRatio") ?? "") || undefined;
-  const cardFile = formData.get("cardImage") as File | null;
   const cardAspectRatio = String(formData.get("cardAspectRatio") ?? "") || undefined;
 
   const slug = slugify(slugInput || title);
 
-  if (!title || !slug || !file || file.size === 0) {
+  if (!title || !slug) {
     return { error: "Vui lòng nhập tiêu đề và chọn ảnh bìa." };
   }
 
   try {
-    const uploaded = await uploadToBucket(file, "blog", undefined, aspectRatio);
+    const uploaded = await resolveUploadedImage(formData, "cover", "blog", aspectRatio);
+    if (!uploaded) return { error: "Vui lòng nhập tiêu đề và chọn ảnh bìa." };
     let cardStoragePath: string | null = null;
     let cardImageUrl: string | null = null;
-    if (cardFile && cardFile.size > 0) {
-      const uploadedCard = await uploadToBucket(cardFile, "blog", undefined, cardAspectRatio);
+    const uploadedCard = await resolveUploadedImage(formData, "cardImage", "blog", cardAspectRatio);
+    if (uploadedCard) {
       cardStoragePath = uploadedCard.path;
       cardImageUrl = uploadedCard.publicUrl;
     }
@@ -101,9 +100,7 @@ export async function updatePost(
   const introParagraphs = parseParagraphs(String(formData.get("introParagraphs") ?? ""));
   const vendors = parseVendors(String(formData.get("vendors") ?? ""));
   const publishedAt = String(formData.get("publishedAt") ?? "").trim();
-  const file = formData.get("cover") as File | null;
   const aspectRatio = String(formData.get("aspectRatio") ?? "") || undefined;
-  const cardFile = formData.get("cardImage") as File | null;
   const cardAspectRatio = String(formData.get("cardAspectRatio") ?? "") || undefined;
   const removeCardImage = formData.get("removeCardImage") === "on";
   if (!title) return { error: "Tiêu đề không được để trống." };
@@ -114,12 +111,12 @@ export async function updatePost(
     let coverStoragePath: string | undefined;
     let coverUrl: string | undefined;
 
-    if (file && file.size > 0) {
+    const uploaded = await resolveUploadedImage(formData, "cover", "blog", aspectRatio);
+    if (uploaded) {
       const { rows } = await client.query(
         "select cover_storage_path from blog_posts where id = $1",
         [id],
       );
-      const uploaded = await uploadToBucket(file, "blog", undefined, aspectRatio);
       if (rows[0]?.cover_storage_path) await deleteFromBucket(rows[0].cover_storage_path);
       coverStoragePath = uploaded.path;
       coverUrl = uploaded.publicUrl;
@@ -146,8 +143,8 @@ export async function updatePost(
     let cardStoragePath: string | null | undefined;
     let cardImageUrl: string | null | undefined;
 
-    if (cardFile && cardFile.size > 0) {
-      const uploadedCard = await uploadToBucket(cardFile, "blog", undefined, cardAspectRatio);
+    const uploadedCard = await resolveUploadedImage(formData, "cardImage", "blog", cardAspectRatio);
+    if (uploadedCard) {
       if (currentCardPath) await deleteFromBucket(currentCardPath);
       cardStoragePath = uploadedCard.path;
       cardImageUrl = uploadedCard.publicUrl;

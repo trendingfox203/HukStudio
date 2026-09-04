@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
-import { uploadToBucket, deleteFromBucket } from "@/lib/local-storage";
+import { deleteFromBucket, resolveUploadedImage } from "@/lib/local-storage";
 import { nextSortOrder, reorderRows } from "@/lib/db-ordering";
 import type { ActionState } from "@/components/admin/ActionForm";
 import type { EditState } from "@/components/admin/EditDialog";
@@ -11,16 +11,15 @@ export async function uploadHomeImage(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-  const file = formData.get("file") as File | null;
-  if (!file || file.size === 0) return { error: "Vui lòng chọn 1 ảnh." };
-
   const altText = String(formData.get("altText") ?? "");
   const orientation = String(formData.get("orientation") ?? "landscape") as
     | "portrait"
     | "landscape";
 
   try {
-    const { path, publicUrl } = await uploadToBucket(file, "home");
+    const uploaded = await resolveUploadedImage(formData, "file", "home");
+    if (!uploaded) return { error: "Vui lòng chọn 1 ảnh." };
+    const { path, publicUrl } = uploaded;
     const sortOrder = await nextSortOrder("home_images");
 
     await db().query(
@@ -42,14 +41,14 @@ export async function updateHomeImage(
   formData: FormData,
 ): Promise<EditState> {
   const altText = String(formData.get("altText") ?? "");
-  const file = formData.get("file") as File | null;
 
   const client = db();
 
   try {
-    if (file && file.size > 0) {
+    const uploaded = await resolveUploadedImage(formData, "file", "home");
+    if (uploaded) {
+      const { path, publicUrl } = uploaded;
       const { rows } = await client.query("select storage_path from home_images where id = $1", [id]);
-      const { path, publicUrl } = await uploadToBucket(file, "home");
       if (rows[0]?.storage_path) await deleteFromBucket(rows[0].storage_path);
 
       await client.query(

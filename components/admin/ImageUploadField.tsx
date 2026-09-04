@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { UploadIcon } from "@/components/admin/icons";
-import { compressImageForUpload } from "@/lib/client-image-resize";
+import { uploadRawToBlob } from "@/lib/blob-client-upload";
 
 const RATIO_OPTIONS = [
   { value: "", label: "Giữ nguyên tỉ lệ gốc" },
@@ -37,6 +37,9 @@ export default function ImageUploadField({
   const [preview, setPreview] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const [orientation, setOrientation] = useState<"portrait" | "landscape">("landscape");
+  const [rawPath, setRawPath] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const isKnownPreset = defaultAspectRatio && RATIO_OPTIONS.some((o) => o.value === defaultAspectRatio);
   const [ratioChoice, setRatioChoice] = useState(
     defaultAspectRatio ? (isKnownPreset ? defaultAspectRatio : "custom") : "",
@@ -57,6 +60,8 @@ export default function ImageUploadField({
     const url = URL.createObjectURL(file);
     setPreview(url);
     setFileName(file.name);
+    setRawPath(null);
+    setUploadError(null);
 
     if (detectOrientation) {
       const img = new window.Image();
@@ -66,14 +71,21 @@ export default function ImageUploadField({
       img.src = url;
     }
 
-    // Vercel giới hạn cứng request body 4.5MB (Server Action lẫn API route) —
-    // nén ảnh gốc máy ảnh (20-40MB) ngay trên trình duyệt trước khi form
-    // submit, bằng cách thay file trong chính input này qua DataTransfer.
-    const compressed = await compressImageForUpload(file);
-    if (compressed !== file) {
-      const dt = new DataTransfer();
-      dt.items.add(compressed);
-      input.files = dt.files;
+    // Vercel giới hạn cứng request body 4.5MB (Server Action lẫn API route)
+    // — ảnh gốc máy ảnh (20-40MB) được upload THẲNG lên Vercel Blob ngay
+    // khi chọn file (bỏ qua giới hạn này hoàn toàn), rồi xoá file khỏi
+    // input để lúc submit form không gửi file gốc qua Server Action nữa —
+    // chỉ gửi kèm đường dẫn tạm (`${name}RawPath`) để server tự xử lý
+    // (nén 1 lần duy nhất, không nén 2 lần làm giảm chất lượng ảnh).
+    setUploading(true);
+    try {
+      const path = await uploadRawToBlob(file);
+      setRawPath(path);
+      input.value = "";
+    } catch {
+      setUploadError("Tải ảnh lên thất bại, vui lòng thử lại.");
+    } finally {
+      setUploading(false);
     }
   }
 
@@ -89,17 +101,21 @@ export default function ImageUploadField({
         )}
         <div className="flex flex-col gap-0.5 text-sm">
           <span className="text-ink/80">{fileName ?? "Chọn ảnh từ máy"}</span>
-          <span className="text-xs text-ink/40">{hint}</span>
+          <span className="text-xs text-ink/40">
+            {uploading ? "Đang tải ảnh lên..." : uploadError ? uploadError : hint}
+          </span>
         </div>
       </div>
       <input
         type="file"
         name={name}
         accept="image/*"
-        required={required}
+        required={required && !rawPath}
         onChange={handleChange}
+        disabled={uploading}
         className="sr-only"
       />
+      <input type="hidden" name={`${name}RawPath`} value={rawPath ?? ""} />
       {detectOrientation && <input type="hidden" name="orientation" value={orientation} />}
       {withAspectRatio && (
         <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>

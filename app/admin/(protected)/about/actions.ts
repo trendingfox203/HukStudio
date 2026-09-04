@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { uploadToBucket, deleteFromBucket } from "@/lib/local-storage";
+import { deleteFromBucket, resolveUploadedImage } from "@/lib/local-storage";
 import type { ActionState } from "@/components/admin/ActionForm";
 import { getAboutSettings, upsertSetting } from "@/lib/site-settings";
 
@@ -33,7 +33,6 @@ export async function updateAboutContent(
   const headlinesRaw = String(formData.get("headlines") ?? "");
   const closingBold = String(formData.get("closingBold") ?? "").trim();
   const closingItalic = String(formData.get("closingItalic") ?? "").trim();
-  const file = formData.get("portrait") as File | null;
 
   const paragraphs = parseParagraphs(paragraphsRaw);
   const headlines = parseHeadlines(headlinesRaw);
@@ -47,8 +46,8 @@ export async function updateAboutContent(
     let portraitUrl = prev.portraitUrl;
     let portraitStoragePath = prev.portraitStoragePath;
 
-    if (file && file.size > 0) {
-      const uploaded = await uploadToBucket(file, "about");
+    const uploaded = await resolveUploadedImage(formData, "portrait", "about");
+    if (uploaded) {
       if (portraitStoragePath) await deleteFromBucket(portraitStoragePath);
       portraitUrl = uploaded.publicUrl;
       portraitStoragePath = uploaded.path;

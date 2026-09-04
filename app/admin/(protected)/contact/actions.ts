@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { uploadToBucket, deleteFromBucket } from "@/lib/local-storage";
+import { deleteFromBucket, resolveUploadedImage } from "@/lib/local-storage";
 import type { ActionState } from "@/components/admin/ActionForm";
 import { getContactSettings, upsertSetting } from "@/lib/site-settings";
 
@@ -53,20 +53,18 @@ export async function updateContactContent(
     const photos = [...prev.photos];
 
     for (let i = 0; i < 3; i++) {
-      const file = formData.get(`photo${i + 1}`) as File | null;
-      if (file && file.size > 0) {
-        const uploaded = await uploadToBucket(file, "contact");
+      const uploaded = await resolveUploadedImage(formData, `photo${i + 1}`, "contact");
+      if (uploaded) {
         if (photos[i]?.storagePath) await deleteFromBucket(photos[i].storagePath!);
         photos[i] = { url: uploaded.publicUrl, storagePath: uploaded.path };
       }
     }
 
     let banner = prev.banner;
-    const bannerFile = formData.get("banner") as File | null;
-    if (bannerFile && bannerFile.size > 0) {
-      const uploaded = await uploadToBucket(bannerFile, "contact", 2400);
+    const uploadedBanner = await resolveUploadedImage(formData, "banner", "contact", undefined, 2400);
+    if (uploadedBanner) {
       if (banner.storagePath) await deleteFromBucket(banner.storagePath);
-      banner = { url: uploaded.publicUrl, storagePath: uploaded.path };
+      banner = { url: uploadedBanner.publicUrl, storagePath: uploadedBanner.path };
     }
 
     await upsertSetting("contact", {

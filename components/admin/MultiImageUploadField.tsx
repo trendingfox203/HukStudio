@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { UploadIcon } from "@/components/admin/icons";
-import { compressImageForUpload } from "@/lib/client-image-resize";
+import { uploadRawToBlob, processUploadedImage } from "@/lib/blob-client-upload";
 
 type UploadedItem = { url: string; alt: string; storagePath: string; aspectRatio?: string };
 type PendingItem = {
@@ -43,14 +43,8 @@ export default function MultiImageUploadField({
 
   async function uploadFile(id: string, file: File, ratio: string) {
     try {
-      const compressed = await compressImageForUpload(file);
-      const body = new FormData();
-      body.set("file", compressed);
-      body.set("folder", folder);
-      if (ratio) body.set("aspectRatio", ratio);
-      const res = await fetch("/api/admin/upload", { method: "POST", body });
-      if (!res.ok) throw new Error("upload failed");
-      const uploaded = (await res.json()) as { url: string; storagePath: string };
+      const rawPath = await uploadRawToBlob(file);
+      const uploaded = await processUploadedImage(rawPath, folder, ratio || undefined);
       const result: UploadedItem = { ...uploaded, alt: "", aspectRatio: ratio || undefined };
       setItems((prev) => prev.map((item) => (item.id === id ? { ...item, progress: "done", result } : item)));
     } catch {

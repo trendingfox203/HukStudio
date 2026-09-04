@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
-import { uploadToBucket, deleteFromBucket, recropInBucket } from "@/lib/local-storage";
+import { deleteFromBucket, recropInBucket, resolveUploadedImage } from "@/lib/local-storage";
 import { nextSortOrder, reorderRows } from "@/lib/db-ordering";
 import type { ActionState } from "@/components/admin/ActionForm";
 import type { EditState } from "@/components/admin/EditDialog";
@@ -67,16 +67,15 @@ export async function addFullImageBlock(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-  const file = formData.get("file") as File | null;
   const alt = String(formData.get("alt") ?? "").trim();
   const tall = formData.get("tall") === "on";
   const fullWidth = formData.get("fullWidth") === "on";
   const aspectRatio = String(formData.get("aspectRatio") ?? "") || undefined;
   const caption = buildCaption(formData);
-  if (!file || file.size === 0) return { error: "Vui lòng chọn ảnh." };
 
   try {
-    const uploaded = await uploadToBucket(file, "blog", undefined, aspectRatio);
+    const uploaded = await resolveUploadedImage(formData, "file", "blog", aspectRatio);
+    if (!uploaded) return { error: "Vui lòng chọn ảnh." };
     const sortOrder = await nextSortOrder("blog_blocks", { column: "post_id", value: postId });
     await db().query(
       `insert into blog_blocks (post_id, type, content, sort_order) values ($1, 'full-image', $2, $3)`,
@@ -100,7 +99,6 @@ export async function updateFullImageBlock(
   _prevState: EditState,
   formData: FormData,
 ): Promise<EditState> {
-  const file = formData.get("file") as File | null;
   const alt = String(formData.get("alt") ?? "").trim();
   const tall = formData.get("tall") === "on";
   const fullWidth = formData.get("fullWidth") === "on";
@@ -117,8 +115,8 @@ export async function updateFullImageBlock(
     let storagePath = prev.storagePath;
     let savedAspectRatio = prev.aspectRatio;
 
-    if (file && file.size > 0) {
-      const uploaded = await uploadToBucket(file, "blog", undefined, aspectRatio);
+    const uploaded = await resolveUploadedImage(formData, "file", "blog", aspectRatio);
+    if (uploaded) {
       if (storagePath) await deleteFromBucket(storagePath);
       url = uploaded.publicUrl;
       storagePath = uploaded.path;
