@@ -19,7 +19,7 @@ export default function AboutHero({ about }: { about: AboutSettings }) {
 
       <div className="flex flex-col lg:grid lg:grid-cols-[0.9fr_0.75fr_1.55fr] lg:items-stretch lg:gap-x-10">
         <div className="flex flex-col gap-5 lg:col-start-1 lg:row-start-1 lg:self-end">
-          <p className="font-losevka-charon max-w-sm text-base font-extrabold text-ink text-left">{about.heading}</p>
+          <p className="font-losevka-charon max-w-sm text-sm font-extrabold text-ink text-left">{about.heading}</p>
           <div className="font-gilroy flex max-w-sm flex-col gap-4 text-xs leading-relaxed whitespace-pre-line text-ink/70">
             {about.paragraphs.map((paragraph, index) => (
               <p key={index} className="text-justify">
@@ -41,7 +41,7 @@ export default function AboutHero({ about }: { about: AboutSettings }) {
 
         <Link
           href={EXPLORE_HREF}
-          className="font-svn-bold flex w-fit items-center gap-2 text-4xl font-bold text-black transition-opacity hover:opacity-70 lg:col-start-1 lg:row-start-2 lg:self-end"
+          className="font-svn-bold flex w-fit items-center gap-2 text-2xl font-bold text-black transition-opacity hover:opacity-70 lg:col-start-1 lg:row-start-2 lg:self-end"
         >
           {about.exploreLabel}
           <span aria-hidden="true" className="mt-2">&gt;</span>
@@ -50,8 +50,8 @@ export default function AboutHero({ about }: { about: AboutSettings }) {
         <AboutHeadlineStack headlines={about.headlines} />
 
         <div className="font-gilroy flex max-w-xl flex-col gap-4 lg:col-start-3 lg:row-start-2 lg:self-end">
-          <p className="text-base leading-relaxed font-bold text-black">{about.closingBold}</p>
-          <p className="font-gilroy font-bold text-base text-black italic">{about.closingItalic}</p>
+          <p className="text-sm leading-relaxed font-bold text-black">{about.closingBold}</p>
+          <p className="font-gilroy font-bold text-sm text-black italic">{about.closingItalic}</p>
         </div>
       </div>
     </div>

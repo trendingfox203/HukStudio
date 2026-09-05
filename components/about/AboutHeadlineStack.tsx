@@ -21,7 +21,7 @@ export default function AboutHeadlineStack({ headlines }: { headlines: AboutHead
         <div key={index} className="flex flex-wrap items-start gap-x-3">
           <h2
             onClick={() => line.tag && toggle(index)}
-            className={`font-heavy text-[clamp(1.875rem,3.2vw,2.56rem)] leading-[0.95] font-normal text-black uppercase transition-opacity ${line.tag ? "cursor-pointer hover:opacity-70" : ""
+            className={`font-heavy text-[clamp(2.5rem,4.2vw,3.5rem)] leading-[0.95] font-normal text-black uppercase transition-opacity ${line.tag ? "cursor-pointer hover:opacity-70" : ""
               }`}
           >
             {line.text}
