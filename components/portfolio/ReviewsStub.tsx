@@ -23,14 +23,14 @@ function ReviewCard({ review }: { review: DisplayReview }) {
         <p className="font-playfair text-xl font-normal tracking-wide text-[#57595B] uppercase">
           {review.platform}
         </p>
-        <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full ring-2 ring-[#57595B]">
+        <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full ring-2 ring-[#82888e]">
           <Image src={review.avatarSrc} alt={review.author} fill className="object-cover" />
         </div>
       </div>
 
       <div className="relative mt-3 flex items-center gap-2">
         <span className="text-sm text-ink/90">{review.author}</span>
-        <span className="text-sm tracking-widest text-[#57595B]">
+        <span className="text-sm tracking-widest opacity-80 text-[#57595B]">
           {"★".repeat(review.rating)}
         </span>
       </div>
