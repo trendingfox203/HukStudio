@@ -11,7 +11,7 @@ export type DisplayReview = {
 
 function ReviewCard({ review }: { review: DisplayReview }) {
   return (
-    <div className="relative w-[85%] shrink-0 snap-start overflow-hidden rounded-sm bg-[#F4F4F3] px-8 py-10 sm:w-[420px]">
+    <div className="relative w-[85vw] shrink-0 overflow-hidden rounded-sm bg-[#F4F4F3] px-8 py-10 sm:w-[420px]">
       <div className="flex items-center gap-4">
         <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full ring-2 ring-[#82888e]">
           <Image src={review.avatarSrc} alt={review.author} fill className="object-cover" />
@@ -37,10 +37,12 @@ export default function ReviewsStub({ reviews }: { reviews: DisplayReview[] }) {
       <h2 className="mb-12 text-center font-valencia-light text-3xl font-normal text-[#57595B] uppercase sm:text-6xl md:text-[78px] lg:text-[82px]">
         Reviews
       </h2>
-      <div className="mx-auto flex max-w-5xl snap-x gap-8 overflow-x-auto pb-4">
-        {reviews.map((review) => (
-          <ReviewCard key={review.id} review={review} />
-        ))}
+      <div className="overflow-hidden">
+        <div className="animate-marquee flex w-max gap-8 hover:[animation-play-state:paused]">
+          {reviews.concat(reviews.map((r) => ({ ...r, id: `${r.id}-dup` }))).map((review) => (
+            <ReviewCard key={review.id} review={review} />
+          ))}
+        </div>
       </div>
     </section>
   );
