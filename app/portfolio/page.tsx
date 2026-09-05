@@ -92,13 +92,13 @@ async function getPortfolioData() {
 
   const heroValue = heroResult.rows[0]?.value as
     | {
-        label?: string;
-        tagline?: string;
-        subtitle?: string;
-        headlineBefore?: string;
-        headlineAccent?: string;
-        headlineAfter?: string;
-      }
+      label?: string;
+      tagline?: string;
+      subtitle?: string;
+      headlineBefore?: string;
+      headlineAccent?: string;
+      headlineAfter?: string;
+    }
     | undefined;
 
   const heroImages =
@@ -122,13 +122,13 @@ async function getPortfolioData() {
     reviews:
       reviewRows.length > 0
         ? reviewRows.map((row) => ({
-            id: row.id,
-            quote: row.quote,
-            author: row.author,
-            platform: row.platform,
-            rating: row.rating,
-            avatarSrc: row.avatar_url || fallback.reviews[0].avatarSrc,
-          }))
+          id: row.id,
+          quote: row.quote,
+          author: row.author,
+          platform: row.platform,
+          rating: row.rating,
+          avatarSrc: row.avatar_url || fallback.reviews[0].avatarSrc,
+        }))
         : fallback.reviews,
   };
 }
@@ -144,7 +144,7 @@ export default async function PortfolioPage() {
       <ProjectSection id="editorials" heading="Editorial" items={data.editorials} />
       <ReviewsStub reviews={data.reviews} />
       <div className="flex flex-col items-center gap-4 px-6 py-20 text-center">
-        <h2 className="font-serif text-3xl font-semibold text-[#3d3d3d] uppercase sm:text-6xl md:text-[78px] lg:text-[82px]">
+        <h2 className="font-valencia-light text-3xl font-normal text-[#57595B] uppercase sm:text-6xl md:text-[78px] lg:text-[82px]">
           Booking
         </h2>
         <p className="max-w-md text-sm font-light text-ink/60">

@@ -11,7 +11,7 @@ export type DisplayReview = {
 
 function ReviewCard({ review }: { review: DisplayReview }) {
   return (
-    <div className="relative w-[85%] shrink-0 snap-start overflow-hidden rounded-sm border border-[#c9a876]/40 bg-white px-8 py-10 shadow-[0_10px_30px_-14px_rgba(0,0,0,0.25)] sm:w-[420px]">
+    <div className="relative w-[85%] shrink-0 snap-start overflow-hidden rounded-sm border border-[#57595B]/40 bg-white px-8 py-10 shadow-[0_10px_30px_-14px_rgba(0,0,0,0.25)] sm:w-[420px]">
       <span
         aria-hidden
         className="pointer-events-none absolute -bottom-2 left-4 -z-0 line-clamp-1 max-w-full overflow-hidden font-serif text-7xl font-bold whitespace-nowrap text-black/[0.04] uppercase"
@@ -23,14 +23,14 @@ function ReviewCard({ review }: { review: DisplayReview }) {
         <p className="font-playfair text-xl font-normal tracking-wide text-[#57595B] uppercase">
           {review.platform}
         </p>
-        <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full ring-2 ring-[#c9a876]">
+        <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full ring-2 ring-[#57595B]">
           <Image src={review.avatarSrc} alt={review.author} fill className="object-cover" />
         </div>
       </div>
 
       <div className="relative mt-3 flex items-center gap-2">
         <span className="text-sm text-ink/90">{review.author}</span>
-        <span className="text-sm tracking-widest text-[#c9a876]">
+        <span className="text-sm tracking-widest text-[#57595B]">
           {"★".repeat(review.rating)}
         </span>
       </div>

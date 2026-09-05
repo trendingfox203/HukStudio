@@ -63,10 +63,10 @@ export default function PortfolioIntro({ hero }: { hero: PortfolioHero }) {
 
       <div className="flex flex-col gap-4 px-6 py-6 sm:flex-row sm:items-end sm:justify-between sm:px-10">
         <div>
-          <p className="font-valencia-light text-sm font-medium tracking-[0.25em] text-white/90 uppercase">
+          <p className="font-valencia-light text-xs font-medium tracking-[0.25em] text-white/90 uppercase">
             {hero.tagline}
           </p>
-          <p className="mt-1 font-valencia-light text-lg text-white/60 italic">{hero.subtitle}</p>
+          <p className="font-valencia-light text-base text-white/60 italic">{hero.subtitle}</p>
         </div>
         <div className="flex items-center gap-3">
           <button

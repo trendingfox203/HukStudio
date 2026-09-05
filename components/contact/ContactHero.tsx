@@ -20,7 +20,7 @@ export default function ContactHero({
       </nav>
 
       <div className="mt-10 flex flex-col gap-10 xl:flex-row xl:items-start xl:justify-between xl:gap-16">
-        <div className="flex flex-col gap-10 lg:flex-row lg:items-center lg:gap-15">
+        <div className="flex flex-col gap-10 items-start lg:flex-row lg:items-center lg:gap-15">
           <div className="flex shrink-0 gap-3 sm:gap-4">
             {photos.map((photo, index) => (
               <div key={index} className="relative aspect-[4/5] w-[110px] sm:w-[195px] ">
