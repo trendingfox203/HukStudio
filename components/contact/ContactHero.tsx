@@ -44,7 +44,7 @@ export default function ContactHero({
           </div>
         </div>
 
-        <h1 className="font-valencia-light shrink-0 text-[13vw] leading-[0.85] text-ink uppercase sm:text-[8vw] xl:text-[4.25vw]">
+        <h1 className="font-valencia-light shrink-0 text-[13vw] leading-[0.85] text-ink uppercase sm:text-[8vw] xl:text-[3.4rem]">
           Contact
         </h1>
       </div>

@@ -3,6 +3,7 @@ import { Cormorant_Garamond, Jost, Alex_Brush, Urbanist, Anton, JetBrains_Mono }
 import localFont from "next/font/local";
 import Nav from "@/components/layout/Nav";
 import Footer from "@/components/layout/Footer";
+import DesktopFrame from "@/components/common/DesktopFrame";
 import { getGeneralSettings, getContactSettings } from "@/lib/site-settings";
 import "./globals.css";
 
@@ -117,16 +118,18 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${cormorant.variable} ${jost.variable} ${alexBrush.variable} ${playfair.variable} ${urbanist.variable} ${anton.variable} ${jetbrainsMono.variable} ${ValenciaLight.variable} ${DFVNCalathea.variable} ${BlostaScript.variable} ${losevkaCharon.variable} ${DFVNDesirableCalligraphy.variable} ${SVNLightitalic.variable} ${SVNBold.variable} ${SVNGilroy.variable} antialiased`}
     >
-      <body className="flex min-h-screen flex-col bg-white font-valencia-light text-ink">
-        <Nav siteName={settings.siteName} instagramUrl={settings.instagramUrl} />
-        <div id="top" />
-        <main className="flex-1">{children}</main>
-        <Footer
-          siteName={settings.siteName}
-          contactEmail={settings.contactEmail}
-          instagramUrl={settings.instagramUrl}
-          whatsappPhone={whatsappPhone}
-        />
+      <body className="bg-white font-valencia-light text-ink">
+        <DesktopFrame className="flex min-h-screen flex-col">
+          <Nav siteName={settings.siteName} instagramUrl={settings.instagramUrl} />
+          <div id="top" />
+          <main className="flex-1">{children}</main>
+          <Footer
+            siteName={settings.siteName}
+            contactEmail={settings.contactEmail}
+            instagramUrl={settings.instagramUrl}
+            whatsappPhone={whatsappPhone}
+          />
+        </DesktopFrame>
       </body>
     </html>
   );
