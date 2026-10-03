@@ -2,7 +2,8 @@ export const siteName = "HUK STUDIO";
 
 export const navLinks = [
   { label: "Home", href: "/" },
-  { label: "Portfolio", href: "/portfolio" },
+  // { label: "Portfolio", href: "/portfolio" },
+  { label: "Portfolio", href: "https://hukstudio.pic-time.com/portfolio" },
   { label: "Blog", href: "/blog" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },

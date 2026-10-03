@@ -1,15 +1,23 @@
 @import "tailwindcss";
 
 :root {
-  --color-paper: #ffffff;
+  --color-paper: #f5f5f5;
   --color-ink: #000000;
   --color-muted: #504e4e;
+  /* 1 đơn vị trong bản thiết kế Figma 1920px = --u px trong khung 1475px của
+     DesktopFrame (từ 1280px trở lên). Dùng: calc(930 * var(--u)). */
+  --u: 0.768229px;
 }
 
 @theme inline {
   --color-paper: var(--color-paper);
   --color-ink: var(--color-ink);
   --color-muted: var(--color-muted);
+  --font-inter-sans: var(--font-inter);
+  --font-forma-display:
+    "Forma DJR Display", var(--font-inter-tight), "Inter", sans-serif;
+  --font-forma-lt:
+    "Forma DJR Dsp Lt", var(--font-inter-tight), "Inter", sans-serif;
   --font-serif: var(--font-playfair);
   --font-sans: var(--font-jost);
   --font-script: var(--font-palayfair);
@@ -25,6 +33,10 @@
   --font-dfvn-desirable-calligraphy: var(--font-dfvn-desirable-calligraphy);
   --font-svn-light-italic: var(--font-svn-light-italic);
   --font-svn-bold: var(--font-svn-bold);
+  --font-arsenal-italic: var(--font-arsenal-italic);
+  --font-arsenal-bold: var(--font-arsenal-bold);
+  --font-arsenal-regular: var(--font-arsenal-regular);
+  --font-aboreto: var(--font-aboreto);
 }
 
 html {

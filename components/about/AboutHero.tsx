@@ -3,55 +3,46 @@ import Link from "next/link";
 import type { AboutSettings } from "@/lib/site-settings";
 import AboutHeadlineStack from "@/components/about/AboutHeadlineStack";
 
-const EXPLORE_HREF = "/blog";
 const PORTRAIT_ALT = "Portrait of HUK, wedding photographer";
 
+// Từ xl (1280px) trở lên: kích thước theo đúng bản thiết kế Figma 1920px,
+// 1 đơn vị Figma = var(--u) (xem globals.css). Dưới xl: layout responsive thường.
 export default function AboutHero({ about }: { about: AboutSettings }) {
   return (
-    <div className="px-6 pt-8 pb-20 sm:px-10 sm:pt-10 lg:px-20">
-      <nav className="mb-10 flex items-center gap-2 font-valencia-light text-base text-ink/50 sm:mb-14">
-        <Link href="/" className="transition-colors hover:text-ink">
+    <div className="px-6 pt-8 pb-20 sm:px-10 sm:pt-10 lg:px-20 xl:px-[calc(39*var(--u))] xl:pt-0 xl:pb-0">
+      <nav className="mb-10 flex items-center gap-2 font-gilroy text-base text-ink sm:mb-14 xl:mb-[calc(107*var(--u))] xl:gap-[calc(21*var(--u))] xl:text-[calc(16.5*var(--u))] xl:leading-[calc(20*var(--u))]">
+        <Link href="/" className="transition-opacity hover:opacity-60">
           Home
         </Link>
-        <span>&gt;</span>
-        <span className="text-ink">About</span>
+        <span aria-hidden="true">&gt;</span>
+        <span>About</span>
       </nav>
 
-      <div className="flex flex-col lg:grid lg:grid-cols-[0.9fr_0.75fr_1.55fr] lg:items-stretch lg:gap-x-10">
-        <div className="flex flex-col gap-5 lg:col-start-1 lg:row-start-1 lg:self-end">
-          <p className="font-losevka-charon max-w-sm text-sm font-extrabold text-ink text-left">{about.heading}</p>
-          <div className="font-gilroy flex max-w-sm flex-col gap-4 text-xs leading-relaxed whitespace-pre-line text-ink/70">
+      <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-16 xl:mx-auto xl:w-[calc(923*var(--u))] xl:items-end xl:justify-between xl:gap-0">
+        <div className="relative mx-auto aspect-[4/5] w-full max-w-md shrink-0 lg:mx-0 lg:w-[42%] xl:aspect-[471/598] xl:w-[calc(471*var(--u))] xl:max-w-none">
+          <Image
+            src={about.portraitUrl}
+            alt={PORTRAIT_ALT}
+            fill
+            sizes="(min-width: 1024px) 42vw, 90vw"
+            className="object-cover"
+          />
+        </div>
+
+        <div className="flex flex-1 flex-col gap-10 xl:w-[calc(363*var(--u))] xl:flex-none xl:gap-0">
+          <p className="max-w-md font-arsenal-italic text-sm text-ink xl:mb-[calc(61*var(--u))] xl:max-w-none xl:text-[calc(13.2*var(--u))] xl:leading-[calc(20*var(--u))]">
+            {about.heading}
+          </p>
+
+          <AboutHeadlineStack headlines={about.headlines} />
+
+          <div className="flex max-w-xl flex-col gap-4 font-arsenal-regular text-sm leading-relaxed whitespace-pre-line text-ink xl:mt-[calc(66*var(--u))] xl:max-w-none xl:gap-[calc(19.6*var(--u))] xl:text-[calc(12.5*var(--u))] xl:leading-[calc(19.4*var(--u))]">
             {about.paragraphs.map((paragraph, index) => (
               <p key={index} className="text-justify">
                 {paragraph}
               </p>
             ))}
           </div>
-        </div>
-
-        <div className="relative mx-auto aspect-[7/9] w-[80%] max-w-sm lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mx-0 lg:max-w-none lg:self-end">
-          <Image
-            src={about.portraitUrl}
-            alt={PORTRAIT_ALT}
-            fill
-            sizes="(min-width: 1024px) 25vw, 80vw"
-            className="object-cover"
-          />
-        </div>
-
-        <Link
-          href={EXPLORE_HREF}
-          className="font-svn-bold flex w-fit items-center gap-2 text-2xl font-bold text-black transition-opacity hover:opacity-70 lg:col-start-1 lg:row-start-2 lg:self-end"
-        >
-          {about.exploreLabel}
-          <span aria-hidden="true" className="mt-2">&gt;</span>
-        </Link>
-
-        <AboutHeadlineStack headlines={about.headlines} />
-
-        <div className="font-gilroy flex max-w-xl flex-col gap-4 lg:col-start-3 lg:row-start-2 lg:self-end">
-          <p className="text-sm leading-relaxed font-bold text-black">{about.closingBold}</p>
-          <p className="font-gilroy font-bold text-sm text-black italic">{about.closingItalic}</p>
         </div>
       </div>
     </div>

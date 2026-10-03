@@ -1,11 +1,23 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Jost, Alex_Brush, Urbanist, Anton, JetBrains_Mono } from "next/font/google";
+import { Inter, Inter_Tight, Cormorant_Garamond, Jost, Alex_Brush, Urbanist, Anton, JetBrains_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import Nav from "@/components/layout/Nav";
 import Footer from "@/components/layout/Footer";
 import DesktopFrame from "@/components/common/DesktopFrame";
 import { getGeneralSettings, getContactSettings } from "@/lib/site-settings";
 import "./globals.css";
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin", "vietnamese"],
+  weight: ["300", "400", "600", "800"],
+});
+
+const interTight = Inter_Tight({
+  variable: "--font-inter-tight",
+  subsets: ["latin", "vietnamese"],
+  weight: ["200", "400", "600", "700"],
+});
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -96,6 +108,26 @@ const SVNGilroy = localFont({
   variable: "--font-svn-regular",
   weight: "400",
 });
+const ArsenalItalic = localFont({
+  src: "../fonts/Arsenal-Italic.ttf",
+  variable: "--font-arsenal-italic",
+  weight: "400",
+});
+const ArsenalBold = localFont({
+  src: "../fonts/Arsenal-Bold.ttf",
+  variable: "--font-arsenal-bold",
+  weight: "400",
+});
+const ArsenalRegular = localFont({
+  src: "../fonts/Arsenal-Regular.ttf",
+  variable: "--font-arsenal-regular",
+  weight: "400",
+});
+const aboreto = localFont({
+  src: "../fonts/Aboreto-Regular.ttf",
+  variable: "--font-aboreto-regular",
+  weight: "400",
+});
 export async function generateMetadata(): Promise<Metadata> {
   const { siteName } = await getGeneralSettings();
   return {
@@ -116,9 +148,9 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${cormorant.variable} ${jost.variable} ${alexBrush.variable} ${playfair.variable} ${urbanist.variable} ${anton.variable} ${jetbrainsMono.variable} ${ValenciaLight.variable} ${DFVNCalathea.variable} ${BlostaScript.variable} ${losevkaCharon.variable} ${DFVNDesirableCalligraphy.variable} ${SVNLightitalic.variable} ${SVNBold.variable} ${SVNGilroy.variable} antialiased`}
+      className={`${inter.variable} ${interTight.variable} ${cormorant.variable} ${jost.variable} ${alexBrush.variable} ${playfair.variable} ${urbanist.variable} ${anton.variable} ${jetbrainsMono.variable} ${ValenciaLight.variable} ${DFVNCalathea.variable} ${BlostaScript.variable} ${losevkaCharon.variable} ${DFVNDesirableCalligraphy.variable} ${SVNLightitalic.variable} ${SVNBold.variable} ${SVNGilroy.variable} ${ArsenalItalic.variable} ${ArsenalBold.variable} ${ArsenalRegular.variable} ${aboreto.variable}  antialiased`}
     >
-      <body className="bg-white font-valencia-light text-ink">
+      <body className="bg-paper font-valencia-light text-ink">
         <DesktopFrame className="flex min-h-screen flex-col">
           <Nav siteName={settings.siteName} instagramUrl={settings.instagramUrl} />
           <div id="top" />

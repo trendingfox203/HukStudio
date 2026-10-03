@@ -94,3 +94,29 @@ create table if not exists blog_blocks (
   sort_order int not null,
   created_at timestamptz not null default now()
 );
+
+-- Lượt thích + bình luận của bài blog (khách không cần đăng nhập)
+alter table blog_posts add column if not exists like_count int not null default 0;
+
+create table if not exists blog_comments (
+  id uuid primary key default gen_random_uuid(),
+  post_id uuid not null references blog_posts(id) on delete cascade,
+  author_name text not null,
+  body text not null,
+  created_at timestamptz not null default now()
+);
+create index if not exists blog_comments_post_idx on blog_comments (post_id, created_at desc);
+
+-- Đăng nhập khách bằng email + mã 6 số (để bình luận)
+alter table blog_comments add column if not exists author_email text;
+
+create table if not exists email_login_codes (
+  id uuid primary key default gen_random_uuid(),
+  email text not null,
+  code_hash text not null,
+  expires_at timestamptz not null,
+  attempts int not null default 0,
+  consumed boolean not null default false,
+  created_at timestamptz not null default now()
+);
+create index if not exists email_login_codes_email_idx on email_login_codes (email, created_at desc);

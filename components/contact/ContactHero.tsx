@@ -28,7 +28,8 @@ export default function ContactHero({
                   src={photo.url}
                   alt={`HUK, wedding photographer ${index + 1}`}
                   fill
-                  sizes="170px"
+                  sizes="700px"
+                  quality={90}
                   className="object-cover grayscale"
                 />
               </div>

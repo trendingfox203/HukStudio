@@ -24,10 +24,10 @@ export default function Nav({
 
   return (
     <header className={`relative z-50 ${bg}`}>
-      <div className="mx-auto flex max-w-[1800px] items-center justify-between px-6 py-8 md:px-12 lg:px-20">
+      <div className="mx-auto flex max-w-[1800px] items-center justify-between px-6 py-8 md:px-12 lg:px-20 xl:pt-[calc(72*var(--u))] xl:pr-[calc(40*var(--u))] xl:pb-[calc(27*var(--u))] xl:pl-[calc(39*var(--u))]">
         <Link
           href="/"
-          className={`flex items-center gap-3 font-dfvn-calathea text-5xl font-normal tracking-wide ${text}`}
+          className={`flex items-center gap-3 font-dfvn-calathea text-5xl font-normal tracking-wide xl:gap-[calc(25*var(--u))] xl:text-[calc(54.8*var(--u))] xl:tracking-[0.085em] ${text}`}
           onClick={() => setOpen(false)}
         >
           <Image
@@ -35,17 +35,17 @@ export default function Nav({
             alt=""
             width={36}
             height={36}
-            className={`shrink-0 ${dark ? "invert" : ""}`}
+            className={`shrink-0 xl:h-[calc(63*var(--u))] xl:w-[calc(63*var(--u))] ${dark ? "invert" : ""}`}
           />
           {siteName}
         </Link>
 
-        <nav className="hidden items-center gap-8 lg:flex lg:gap-10 xl:gap-14">
+        <nav className="hidden items-center gap-8 lg:flex lg:gap-10 xl:mt-[calc(9*var(--u))] xl:gap-[calc(74*var(--u))]">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className={`text-lg font-dfvn-calathea font-bold tracking-[0.2em]  ${text} uppercase transition-opacity hover:opacity-70 ${pathname === link.href ? "opacity-100" : "opacity-80"
+              className={`text-lg font-dfvn-calathea font-normal tracking-[0.2em] xl:text-[calc(34.7*var(--u))] xl:tracking-[0.035em]  ${text} uppercase transition-opacity hover:opacity-70 ${pathname === link.href ? "opacity-100" : "opacity-80"
                 }`}
             >
               {link.label}
@@ -56,7 +56,7 @@ export default function Nav({
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Instagram"
-            className={`${text} opacity-80 transition-opacity hover:opacity-70`}
+            className={`${text} opacity-80 transition-opacity hover:opacity-70 xl:hidden`}
           >
             <InstagramIcon />
           </a>

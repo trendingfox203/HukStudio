@@ -8,6 +8,7 @@ export default function ContactBanner({ src }: { src: string }) {
         alt="HUK Studio editorial wedding photography"
         fill
         sizes="100vw"
+        quality={90}
         className="object-cover grayscale"
       />
     </div>

@@ -6,6 +6,10 @@ import { getPostBySlug, getRelatedPosts } from "@/lib/blog";
 import BlogBlocks from "@/components/blog/BlogBlocks";
 import VendorCredits from "@/components/blog/VendorCredits";
 import ContinueReading from "@/components/blog/ContinueReading";
+import Comments from "@/components/blog/Comments";
+import PostActionBar from "@/components/blog/PostActionBar";
+import { getPostEngagement } from "@/lib/blog-engagement";
+import { displayNameFromEmail, getUserSession } from "@/lib/user-auth";
 
 export async function generateMetadata(props: PageProps<"/blog/[slug]">): Promise<Metadata> {
   const { slug } = await props.params;
@@ -13,57 +17,93 @@ export async function generateMetadata(props: PageProps<"/blog/[slug]">): Promis
   return { title: post?.title ?? "Blog" };
 }
 
+function formatDate(value: string): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+}
+
+// Layout 1 cột hẹp (rộng 800 trên khung 1920, 1 đơn vị Figma = var(--u)), font Inter.
 export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
   const { slug } = await props.params;
   const post = await getPostBySlug(slug);
   if (!post) notFound();
 
   const relatedPosts = await getRelatedPosts(post.slug);
+  const engagement = await getPostEngagement(post.id);
+  const visitor = await getUserSession();
 
   return (
-    <article>
-      <div className="mx-1 grid grid-cols-1 gap-x-[8rem] gap-y-8 px-6 pt-8 sm:px-12 sm:pt-12 lg:grid-cols-[7fr_3fr]">
-        <nav className="font-valencia-light flex flex-wrap items-center gap-2 text-base text-ink/60 lg:col-start-1 lg:row-start-1">
-          <Link href="/" className="hover:text-ink">
+    <article className="font-inter-sans text-[#030712]">
+      <div className="mx-auto w-full px-6 pt-8 sm:max-w-[800px] sm:px-0 xl:max-w-[calc(800*var(--u))] xl:pt-[calc(48*var(--u))]">
+        <nav className="flex flex-wrap items-center gap-x-[0.75rem] font-forma-display text-xs font-semibold text-black xl:gap-x-[calc(14*var(--u))] xl:text-[calc(12*var(--u))]">
+          <Link href="/" className="hover:opacity-60">
             Home
           </Link>
-          <span className="text-2xl">&gt;</span>
-          <Link href="/blog" className="hover:text-ink">
-            Blog
+          <span aria-hidden="true" className="font-normal text-black/50">
+            &gt;
+          </span>
+          <Link href="/blog" className="hover:opacity-60">
+            Posts
           </Link>
-          <span className="text-2xl">&gt;</span>
-          <span className="text-ink/60">{post.title}</span>
+          <span aria-hidden="true" className="font-normal text-black/50">
+            &gt;
+          </span>
+          <span className="truncate">{post.title}</span>
         </nav>
 
-        <div className="flex flex-col gap-16 lg:col-start-1 lg:row-start-2">
-          <h1 className="font-playfair text-left text-3xl font-bold text-ink sm:text-4xl">{post.title}</h1>
-          <p className="font-gilroy text-justify text-sm font-semibold text-ink/80 italic">{post.excerpt}</p>
-          <div className="text-justify font-gilroy flex flex-col gap-4 text-sm leading-relaxed text-ink/70">
+        <h1 className="mt-10 font-forma-display text-left text-3xl leading-[1.05] font-bold tracking-[0.1px] xl:mt-[calc(60*var(--u))] xl:text-[calc(42*var(--u))] xl:leading-[calc(41.5*var(--u))]">
+          {post.title}
+        </h1>
+
+        <p className="mt-4 font-forma-lt text-left text-base leading-[1.2] font-extralight tracking-[0.3px] text-black xl:mt-[calc(15*var(--u))] xl:text-[calc(18*var(--u))] xl:leading-[calc(21.6*var(--u))]">
+          {post.excerpt}
+        </p>
+
+        <p className="mt-6 font-forma-lt text-xs text-black xl:mt-[calc(30*var(--u))] xl:text-[calc(12*var(--u))]">
+          {formatDate(post.publishedAt)}
+        </p>
+
+        <div className="mx-auto mt-10 w-full xl:mt-[calc(62*var(--u))] xl:w-[calc(765*var(--u))]">
+          <Image
+            src={post.coverSrc}
+            alt={post.coverAlt}
+            width={0}
+            height={0}
+            priority
+            sizes="100vw"
+            quality={90}
+            className="h-auto w-full"
+          />
+        </div>
+
+        {post.introParagraphs.length > 0 && (
+          <div className="mt-10 flex flex-col gap-4 text-left text-[15px] leading-normal font-light xl:mt-[calc(50*var(--u))] xl:gap-[calc(22.5*var(--u))] xl:text-[calc(15*var(--u))] xl:leading-[calc(22.5*var(--u))]">
             {post.introParagraphs.map((paragraph, index) => (
               <p key={index}>{paragraph}</p>
             ))}
           </div>
-        </div>
+        )}
 
-        <div className="relative aspect-[3/4] w-full lg:col-start-2 lg:row-span-2 lg:row-start-1">
-          <Image
-            src={post.coverSrc}
-            alt={post.coverAlt}
-            fill
-            priority
-            sizes="(min-width: 1024px) 33vw, 60vw"
-            className="object-cover"
-          />
+        <div className="pt-10 pb-8 xl:pt-[calc(50*var(--u))]">
+          <BlogBlocks blocks={post.blocks} />
         </div>
-      </div>
-
-      <div className="mx-auto max-w-6xl px-6 pt-14 pb-8 sm:px-12">
-        <BlogBlocks blocks={post.blocks} />
       </div>
 
       <VendorCredits vendors={post.vendors} />
 
+      {engagement.enabled && (
+        <div className="mx-auto w-full px-6 pb-16 sm:max-w-[800px] sm:px-0 xl:max-w-[calc(800*var(--u))] xl:pb-[calc(60*var(--u))]">
+          <Comments postId={post.id} slug={post.slug} comments={engagement.comments} userName={visitor ? displayNameFromEmail(visitor.email) : null} />
+        </div>
+      )}
+
       <ContinueReading posts={relatedPosts} />
+
+      {engagement.enabled && (
+        <PostActionBar postId={post.id} title={post.title} commentCount={engagement.comments.length} />
+      )}
+      <div className="h-[76px]" aria-hidden="true" />
     </article>
   );
 }

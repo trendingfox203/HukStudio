@@ -225,3 +225,9 @@ export async function deletePost(id: string) {
   revalidatePath("/blog");
   revalidatePath("/admin/blog");
 }
+
+export async function deleteComment(postId: string, commentId: string) {
+  await db().query("delete from blog_comments where id = $1 and post_id = $2", [commentId, postId]);
+  revalidatePath("/blog/[slug]", "page");
+  revalidatePath(`/admin/blog/${postId}`);
+}

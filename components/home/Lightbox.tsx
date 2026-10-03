@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import type { MasonryImage } from "./MasonryGrid";
 
@@ -36,7 +37,7 @@ export default function Lightbox({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index]);
 
-  return (
+  return createPortal(
     <div role="dialog" aria-label="Gallery" className="fixed inset-0 z-[9999]">
       <button
         type="button"
@@ -52,7 +53,8 @@ export default function Lightbox({
               src={image.src}
               alt={image.alt}
               fill
-              sizes="90vw"
+              sizes="100vw"
+              quality={90}
               className="object-contain"
               priority
             />
@@ -114,6 +116,7 @@ export default function Lightbox({
           />
         </svg>
       </button>
-    </div>
+    </div>,
+    document.body,
   );
 }

@@ -13,7 +13,7 @@ import ConfirmSubmitButton from "@/components/admin/ConfirmSubmitButton";
 import SortableGrid from "@/components/admin/SortableGrid";
 import { TextInput, TextArea } from "@/components/admin/FormControls";
 import { TrashIcon, GripIcon } from "@/components/admin/icons";
-import { updatePost } from "../actions";
+import { updatePost, deleteComment } from "../actions";
 import {
   addTextBlock,
   updateTextBlock,
@@ -77,7 +77,7 @@ export default async function AdminBlogPostPage({ params }: { params: Promise<{ 
   const { id } = await params;
   const client = db();
 
-  const [postResult, blockResult] = await Promise.all([
+  const [postResult, blockResult, commentResult] = await Promise.all([
     client.query<PostRow>(
       `select id, title, excerpt, intro_paragraphs, vendors, cover_url, card_image_url, published_at::text
        from blog_posts where id = $1`,
@@ -87,11 +87,16 @@ export default async function AdminBlogPostPage({ params }: { params: Promise<{ 
       `select id, type, content, sort_order from blog_blocks where post_id = $1 order by sort_order asc`,
       [id],
     ),
+    client.query<{ id: string; author_name: string; body: string; created_at: string }>(
+      `select id, author_name, body, created_at::text from blog_comments where post_id = $1 order by created_at desc`,
+      [id],
+    ),
   ]);
 
   const postData = postResult.rows[0];
   if (!postData) notFound();
   const blocks = blockResult.rows;
+  const comments = commentResult.rows;
 
   return (
     <div className="flex flex-col gap-12">
@@ -244,6 +249,36 @@ export default async function AdminBlogPostPage({ params }: { params: Promise<{ 
             <CaptionFields />
           </ActionForm>
         </Card>
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <h2 className="font-display text-lg text-ink">Bình luận ({comments.length})</h2>
+        {comments.length === 0 ? (
+          <p className="text-sm text-ink/50">Chưa có bình luận nào.</p>
+        ) : (
+          <div className="flex flex-col gap-3">
+            {comments.map((comment) => (
+              <Card key={comment.id} className="flex items-start gap-4">
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium text-ink">
+                    {comment.author_name}
+                    <span className="ml-2 text-xs font-normal text-ink/40">{comment.created_at.slice(0, 16)}</span>
+                  </p>
+                  <p className="mt-1 text-sm break-words whitespace-pre-line text-ink/80">{comment.body}</p>
+                </div>
+                <form action={deleteComment.bind(null, id, comment.id)}>
+                  <ConfirmSubmitButton
+                    message="Xoá bình luận này?"
+                    title="Xoá"
+                    className="rounded p-1.5 text-red-600 hover:bg-red-50"
+                  >
+                    <TrashIcon />
+                  </ConfirmSubmitButton>
+                </form>
+              </Card>
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );
