@@ -6,8 +6,8 @@ export default function ContinueReading({ posts }: { posts: ResolvedPost[] }) {
   if (posts.length === 0) return null;
 
   return (
-    <section className="mx-auto w-full border-t border-ink/10 px-6 py-16 sm:max-w-[800px] sm:px-0 xl:max-w-[calc(800*var(--u))] xl:py-[calc(48*var(--u))]">
-      <h2 className="font-forma-display mb-10 text-left text-lg font-semibold xl:text-[calc(18*var(--u))] text-ink">
+    <section className="mx-auto w-full border-t border-ink/10 px-6 py-16 sm:max-w-[800px] sm:px-0 xl:max-w-[calc(1240*var(--u))] xl:py-[calc(48*var(--u))]">
+      <h2 className="font-gilroy mb-10 text-left text-lg font-semibold xl:text-[calc(32*var(--u))] text-ink">
         Continue Reading
       </h2>
       <div className="mx-auto grid max-w-full grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 xl:gap-x-[calc(16*var(--u))]">

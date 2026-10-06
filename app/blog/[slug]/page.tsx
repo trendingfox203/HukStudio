@@ -8,8 +8,10 @@ import VendorCredits from "@/components/blog/VendorCredits";
 import ContinueReading from "@/components/blog/ContinueReading";
 import Comments from "@/components/blog/Comments";
 import PostActionBar from "@/components/blog/PostActionBar";
+import AboutFooterBand from "@/components/about/AboutFooterBand";
 import { getPostEngagement } from "@/lib/blog-engagement";
 import { displayNameFromEmail, getUserSession } from "@/lib/user-auth";
+import { getGeneralSettings, getContactSettings } from "@/lib/site-settings";
 
 export async function generateMetadata(props: PageProps<"/blog/[slug]">): Promise<Metadata> {
   const { slug } = await props.params;
@@ -32,11 +34,14 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
   const relatedPosts = await getRelatedPosts(post.slug);
   const engagement = await getPostEngagement(post.id);
   const visitor = await getUserSession();
+  const [general, contact] = await Promise.all([getGeneralSettings(), getContactSettings()]);
+  const whatsappPhone =
+    contact.infoColumns.find((column) => column.label === "Phone:")?.lines[0] ?? "";
 
   return (
     <article className="font-inter-sans text-[#030712]">
-      <div className="mx-auto w-full px-6 pt-8 sm:max-w-[800px] sm:px-0 xl:max-w-[calc(800*var(--u))] xl:pt-[calc(48*var(--u))]">
-        <nav className="flex flex-wrap items-center gap-x-[0.75rem] font-forma-display text-xs font-semibold text-black xl:gap-x-[calc(14*var(--u))] xl:text-[calc(12*var(--u))]">
+      <div className="mx-auto w-full px-6 pt-8 sm:max-w-[800px] sm:px-0 xl:max-w-[calc(1240*var(--u))] xl:pt-[calc(48*var(--u))]">
+        <nav className="flex flex-wrap items-center gap-x-[0.75rem] font-arsenal-regular text-xs text-black xl:gap-x-[calc(14*var(--u))] xl:text-[calc(18*var(--u))]">
           <Link href="/" className="hover:opacity-60">
             Home
           </Link>
@@ -52,19 +57,19 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
           <span className="truncate">{post.title}</span>
         </nav>
 
-        <h1 className="mt-10 font-forma-display text-left text-3xl leading-[1.05] font-bold tracking-[0.1px] xl:mt-[calc(60*var(--u))] xl:text-[calc(42*var(--u))] xl:leading-[calc(41.5*var(--u))]">
+        <h1 className="mt-10 font-forma-display text-left text-3xl leading-[1.05] font-bold tracking-[0.1px] xl:mt-[calc(60*var(--u))] xl:text-[calc(64*var(--u))] xl:leading-[calc(80*var(--u))]">
           {post.title}
         </h1>
 
-        <p className="mt-4 font-forma-lt text-left text-base leading-[1.2] font-extralight tracking-[0.3px] text-black xl:mt-[calc(15*var(--u))] xl:text-[calc(18*var(--u))] xl:leading-[calc(21.6*var(--u))]">
+        <p className="mt-4 font-forma-lt text-left text-base leading-[1.2] font-extralight tracking-[0.3px] text-black xl:mt-[calc(32*var(--u))] xl:text-[calc(18*var(--u))] xl:leading-[calc(21.6*var(--u))]">
           {post.excerpt}
         </p>
 
-        <p className="mt-6 font-forma-lt text-xs text-black xl:mt-[calc(30*var(--u))] xl:text-[calc(12*var(--u))]">
+        {/* <p className="mt-6 font-forma-lt text-xs text-black xl:mt-[calc(30*var(--u))] xl:text-[calc(12*var(--u))]">
           {formatDate(post.publishedAt)}
-        </p>
+        </p> */}
 
-        <div className="mx-auto mt-10 w-full xl:mt-[calc(62*var(--u))] xl:w-[calc(765*var(--u))]">
+        <div className="mx-auto mt-10 w-full xl:mt-[calc(24*var(--u))]">
           <Image
             src={post.coverSrc}
             alt={post.coverAlt}
@@ -78,7 +83,7 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
         </div>
 
         {post.introParagraphs.length > 0 && (
-          <div className="mt-10 flex flex-col gap-4 text-left text-[15px] leading-normal font-light xl:mt-[calc(50*var(--u))] xl:gap-[calc(22.5*var(--u))] xl:text-[calc(15*var(--u))] xl:leading-[calc(22.5*var(--u))]">
+          <div className="mt-10 flex flex-col gap-4 text-left text-[15px] leading-normal font-light xl:mt-[calc(50*var(--u))] xl:gap-[calc(22.5*var(--u))] xl:text-[calc(18*var(--u))] xl:leading-[calc(22.5*var(--u))]">
             {post.introParagraphs.map((paragraph, index) => (
               <p key={index}>{paragraph}</p>
             ))}
@@ -99,6 +104,13 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
       )}
 
       <ContinueReading posts={relatedPosts} />
+
+      <AboutFooterBand
+        siteName={general.siteName}
+        contactEmail={general.contactEmail}
+        instagramUrl={general.instagramUrl}
+        whatsappPhone={whatsappPhone}
+      />
 
       {engagement.enabled && (
         <PostActionBar postId={post.id} title={post.title} commentCount={engagement.comments.length} />

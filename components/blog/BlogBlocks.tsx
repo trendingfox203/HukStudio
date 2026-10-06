@@ -3,12 +3,12 @@ import type { ResolvedBlock, ResolvedCaption } from "@/lib/blog";
 
 // Bố cục theo bài mẫu: cột chữ 800, ảnh rộng 765 (cách mép 15), 2 ảnh/hàng
 // mỗi ảnh 365 cách nhau 35 (1 đơn vị = var(--u) từ 1280px trở lên).
-const IMAGE_W = "xl:mx-auto xl:w-[calc(765*var(--u))]";
+const IMAGE_W = "xl:mx-auto xl:w-full";
 const FULL_W = "xl:-ml-[calc(160*var(--u))] xl:w-[calc(1120*var(--u))]";
 
 function Caption({ caption }: { caption: ResolvedCaption }) {
   return (
-    <div className="mx-auto flex max-w-[765px] flex-col gap-1 text-center text-xs leading-[1.5] text-black xl:max-w-none xl:text-[calc(12*var(--u))] xl:leading-[calc(18*var(--u))]">
+    <div className="mx-auto font-gilroy flex max-w-[765px] flex-col gap-1 text-center text-xs leading-[1.5] text-black xl:mb-8 xl:max-w-[95%] text-[calc(18*var(--u))] xl:leading-[calc(24*var(--u))]">
       {caption.title && <p className="italic">&ldquo;{caption.title}&rdquo;</p>}
       <p>{caption.text}</p>
     </div>
@@ -23,7 +23,7 @@ export default function BlogBlocks({ blocks }: { blocks: ResolvedBlock[] }) {
           return (
             <p
               key={block.id}
-              className="text-left text-[15px] leading-normal font-light whitespace-pre-line xl:text-[calc(15*var(--u))] xl:leading-[calc(22.5*var(--u))]"
+              className="text-left text-[15px] leading-normal font-light whitespace-pre-line xl:text-[calc(18*var(--u))] xl:leading-[calc(22.5*var(--u))]"
             >
               {block.text}
             </p>
@@ -34,7 +34,7 @@ export default function BlogBlocks({ blocks }: { blocks: ResolvedBlock[] }) {
           return (
             <h2
               key={block.id}
-              className="text-left text-xl leading-[1.5] font-normal xl:text-[calc(24*var(--u))] xl:leading-[calc(36*var(--u))]"
+              className="text-left text-xl leading-[1.5] font-gilroy font-bold xl:text-[calc(24*var(--u))] xl:leading-[calc(36*var(--u))]"
             >
               {block.text}
             </h2>

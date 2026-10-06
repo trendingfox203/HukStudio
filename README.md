@@ -37,3 +37,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 admin@hukstudio.com
 huk-admin-2026
+deywxPBAwV4cDBtF

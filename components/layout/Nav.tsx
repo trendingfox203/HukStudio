@@ -40,7 +40,7 @@ export default function Nav({
           {siteName}
         </Link>
 
-        <nav className="hidden items-center gap-8 lg:flex lg:gap-10 xl:mt-[calc(9*var(--u))] xl:gap-[calc(74*var(--u))]">
+        <nav className="hidden items-center gap-8 lg:flex lg:gap-10 xl:mt-[calc(9*var(--u))] xl:gap-[calc(48*var(--u))]">
           {navLinks.map((link) => (
             <Link
               key={link.href}
