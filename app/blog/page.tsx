@@ -12,8 +12,8 @@ export default async function BlogPage() {
   return (
     <div className="px-6 py-16 sm:px-12 sm:py-24">
       <div className="mx-auto mb-14 flex max-w-2xl flex-col items-center gap-4 text-center">
-        <h1 className="font-display text-4xl font-semibold text-ink sm:text-5xl">Journal</h1>
-        <p className="font-gilroy text-sm tracking-wide text-ink/60">
+        <h1 className="font-aboreto text-4xl font-semibold text-ink sm:text-5xl">Journal</h1>
+        <p className="font-arsenal-regular text-sm tracking-wide text-ink/60">
           Stories from recent weddings and editorial shoots.
         </p>
       </div>

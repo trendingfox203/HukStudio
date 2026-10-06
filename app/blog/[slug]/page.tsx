@@ -78,7 +78,7 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
         </div>
 
         {post.introParagraphs.length > 0 && (
-          <div className="mt-10 flex flex-col gap-4 text-left text-[15px] leading-normal font-light xl:mt-[calc(50*var(--u))] xl:gap-[calc(22.5*var(--u))] xl:text-[calc(18*var(--u))] xl:leading-[calc(22.5*var(--u))]">
+          <div className="mt-10 flex flex-col gap-4 text-justify text-[15px] leading-normal font-light xl:mt-[calc(50*var(--u))] xl:gap-[calc(22.5*var(--u))] xl:text-[calc(18*var(--u))] xl:leading-[calc(22.5*var(--u))]">
             {post.introParagraphs.map((paragraph, index) => (
               <p key={index}>{paragraph}</p>
             ))}

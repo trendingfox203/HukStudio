@@ -54,7 +54,7 @@ export default function Comments({
           >
             <div
               aria-hidden="true"
-              className="mt-1 h-7 w-7 shrink-0 rounded-full bg-gradient-to-br from-fuchsia-500 to-indigo-400 xl:h-[calc(28*var(--u))] xl:w-[calc(28*var(--u))]"
+              className="mt-1 h-7 w-7 shrink-0 rounded-full bg-[#030712] xl:h-[calc(28*var(--u))] xl:w-[calc(28*var(--u))]"
             />
             <div className="flex flex-1 flex-col gap-2">
               <textarea

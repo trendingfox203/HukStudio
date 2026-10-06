@@ -27,7 +27,7 @@ export default function Nav({
       <div className="mx-auto flex max-w-[1800px] items-center justify-between px-6 py-8 md:px-12 lg:px-20 xl:pt-[calc(72*var(--u))] xl:pr-[calc(40*var(--u))] xl:pb-[calc(27*var(--u))] xl:pl-[calc(39*var(--u))]">
         <Link
           href="/"
-          className={`flex items-center gap-3 font-dfvn-calathea text-5xl font-normal tracking-wide xl:gap-[calc(25*var(--u))] xl:text-[calc(54.8*var(--u))] xl:tracking-[0.085em] ${text}`}
+          className={`flex items-center gap-3 font-aboreto text-5xl font-normal xl:gap-[calc(25*var(--u))] xl:text-[calc(54.8*var(--u))] xl:tracking-[0.085em] ${text}`}
           onClick={() => setOpen(false)}
         >
           <Image
@@ -45,7 +45,7 @@ export default function Nav({
             <Link
               key={link.href}
               href={link.href}
-              className={`text-lg font-aboreto font-normal tracking-[0.2em] xl:text-[calc(32*var(--u))] xl:tracking-[0.035em]  ${text} uppercase transition-opacity hover:opacity-70 ${pathname === link.href ? "opacity-100" : "opacity-80"
+              className={`text-lg font-aboreto font-normal tracking-[0.2em] xl:text-[calc(28*var(--u))] xl:tracking-[0.035em]  ${text} uppercase transition-opacity hover:opacity-70 ${pathname === link.href ? "opacity-100" : "opacity-80"
                 }`}
             >
               {link.label}
