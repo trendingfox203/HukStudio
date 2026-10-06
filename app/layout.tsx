@@ -125,7 +125,7 @@ const ArsenalRegular = localFont({
 });
 const aboreto = localFont({
   src: "../fonts/Aboreto-Regular.ttf",
-  variable: "--font-aboreto-regular",
+  variable: "--font-aboreto",
   weight: "400",
 });
 export async function generateMetadata(): Promise<Metadata> {

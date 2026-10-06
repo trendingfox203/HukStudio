@@ -16,7 +16,7 @@ export default function PostCard({ post }: { post: ResolvedPost }) {
         />
       </div>
       <div className="flex flex-col gap-2 text-left">
-        <p className="font-valencia-light text-left text-lg text-ink xl:text-[calc(32*var(--u))] transition-opacity group-hover:opacity-60">
+        <p className="font-valencia-light text-left text-lg text-ink xl:text-[calc(32g*var(--u))] transition-opacity group-hover:opacity-60">
           {post.title}
         </p>
         <p className="font-gilroy text-justify text-xs leading-relaxed xl:text-[calc(18*var(--u))] text-ink/60">{post.excerpt}</p>
