@@ -1,13 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { ContactPhotoSetting } from "@/lib/site-settings";
+import ContactFormSection from "@/components/contact/ContactFormSection";
 
 export default function ContactHero({
-  photos,
-  introParagraphs,
+  bannerUrl,
+  formLabel,
+  formSubtitle,
 }: {
-  photos: ContactPhotoSetting[];
-  introParagraphs: string[];
+  bannerUrl: string;
+  formLabel: string;
+  formSubtitle: string;
 }) {
   return (
     <div className="px-6 pt-8 sm:px-10 sm:pt-10 lg:px-20">
@@ -19,35 +21,27 @@ export default function ContactHero({
         <span className="text-ink">Contact</span>
       </nav>
 
-      <div className="mt-10 flex flex-col gap-10 xl:flex-row xl:items-start xl:justify-between xl:gap-16">
-        <div className="flex flex-col gap-10 items-start lg:flex-row lg:items-center lg:gap-15">
-          <div className="flex shrink-0 gap-3 sm:gap-4">
-            {photos.map((photo, index) => (
-              <div key={index} className="relative aspect-[4/5] w-[110px] sm:w-[195px] ">
-                <Image
-                  src={photo.url}
-                  alt={`HUK, wedding photographer ${index + 1}`}
-                  fill
-                  sizes="700px"
-                  quality={90}
-                  className="object-cover grayscale"
-                />
-              </div>
-            ))}
-          </div>
-
-          <div className="font-gilroy flex max-w-xl text-left flex-col gap-7 text-sm leading-relaxed text-ink">
-            {introParagraphs.map((paragraph, index) => (
-              <p className="text-left" key={index}>
-                {paragraph}
-              </p>
-            ))}
-          </div>
+      <div className="mt-10 flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-16">
+        <div className="relative aspect-[4/5] w-full shrink-0 lg:w-1/2">
+          <Image
+            src={bannerUrl}
+            alt="HUK Studio editorial wedding photography"
+            fill
+            sizes="(min-width: 1024px) 50vw, 100vw"
+            quality={90}
+            className="object-cover grayscale"
+          />
         </div>
 
-        <h1 className="font-valencia-light shrink-0 text-[13vw] leading-[0.85] text-ink uppercase sm:text-[8vw] xl:text-[3.4rem]">
-          Contact
-        </h1>
+        <div className="w-full lg:w-1/2">
+          <p className="font-aboreto text-3xl tracking-[0.04em] text-ink uppercase sm:text-2xl">
+            {formLabel.replace(/:\s*$/, "")}
+          </p>
+          <p className="font-aboreto mt-5 max-w-xl text-xs leading-relaxed text-ink/70">
+            {formSubtitle}
+          </p>
+          <ContactFormSection />
+        </div>
       </div>
     </div>
   );

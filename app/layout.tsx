@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Inter, Inter_Tight, Cormorant_Garamond, Jost, Alex_Brush, Urbanist, Anton, JetBrains_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import Nav from "@/components/layout/Nav";
-import Footer from "@/components/layout/Footer";
 import DesktopFrame from "@/components/common/DesktopFrame";
+import AboutFooterBand from "@/components/about/AboutFooterBand";
 import { getGeneralSettings, getContactSettings } from "@/lib/site-settings";
 import "./globals.css";
 
@@ -155,7 +155,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           <Nav siteName={settings.siteName} instagramUrl={settings.instagramUrl} />
           <div id="top" />
           <main className="flex-1">{children}</main>
-          <Footer
+          <AboutFooterBand
             siteName={settings.siteName}
             contactEmail={settings.contactEmail}
             instagramUrl={settings.instagramUrl}

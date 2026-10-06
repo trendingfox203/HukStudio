@@ -8,10 +8,8 @@ import VendorCredits from "@/components/blog/VendorCredits";
 import ContinueReading from "@/components/blog/ContinueReading";
 import Comments from "@/components/blog/Comments";
 import PostActionBar from "@/components/blog/PostActionBar";
-import AboutFooterBand from "@/components/about/AboutFooterBand";
 import { getPostEngagement } from "@/lib/blog-engagement";
 import { displayNameFromEmail, getUserSession } from "@/lib/user-auth";
-import { getGeneralSettings, getContactSettings } from "@/lib/site-settings";
 
 export async function generateMetadata(props: PageProps<"/blog/[slug]">): Promise<Metadata> {
   const { slug } = await props.params;
@@ -34,9 +32,6 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
   const relatedPosts = await getRelatedPosts(post.slug);
   const engagement = await getPostEngagement(post.id);
   const visitor = await getUserSession();
-  const [general, contact] = await Promise.all([getGeneralSettings(), getContactSettings()]);
-  const whatsappPhone =
-    contact.infoColumns.find((column) => column.label === "Phone:")?.lines[0] ?? "";
 
   return (
     <article className="font-inter-sans text-[#030712]">
@@ -105,17 +100,10 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
 
       <ContinueReading posts={relatedPosts} />
 
-      <AboutFooterBand
-        siteName={general.siteName}
-        contactEmail={general.contactEmail}
-        instagramUrl={general.instagramUrl}
-        whatsappPhone={whatsappPhone}
-      />
-
       {engagement.enabled && (
         <PostActionBar postId={post.id} title={post.title} commentCount={engagement.comments.length} />
       )}
-      <div className="h-[76px]" aria-hidden="true" />
+      {/* <div className="h-[76px]" aria-hidden="true" /> */}
     </article>
   );
 }

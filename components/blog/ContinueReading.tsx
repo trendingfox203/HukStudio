@@ -18,7 +18,7 @@ export default function ContinueReading({ posts }: { posts: ResolvedPost[] }) {
       <div className="mt-12 flex">
         <Link
           href="/blog"
-          className="font-svn-bold group flex items-center gap-3 text-xl font-bold text-ink xl:text-[calc(20*var(--u))] transition-opacity hover:opacity-70"
+          className="font-svn-bold group flex items-center gap-3 text-xl font-bold text-ink xl:text-[calc(32*var(--u))] transition-opacity hover:opacity-70"
         >
           Explore More
           <svg

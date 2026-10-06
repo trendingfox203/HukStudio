@@ -9,7 +9,7 @@ const PORTRAIT_ALT = "Portrait of HUK, wedding photographer";
 // 1 đơn vị Figma = var(--u) (xem globals.css). Dưới xl: layout responsive thường.
 export default function AboutHero({ about }: { about: AboutSettings }) {
   return (
-    <div className="px-6 pt-8 pb-20 sm:px-10 sm:pt-10 lg:px-20 xl:px-[calc(39*var(--u))] xl:pt-0 xl:pb-0">
+    <div className="px-6 pt-8 pb-20 sm:px-10 sm:pt-10 lg:px-20 xl:px-[calc(39*var(--u))] xl:pt-0 xl:pb-0 xl:mb-32">
       <nav className="mb-10 flex items-center gap-2 font-gilroy text-base text-ink sm:mb-14 xl:mb-[calc(107*var(--u))] xl:gap-[calc(21*var(--u))] xl:text-[calc(16.5*var(--u))] xl:leading-[calc(20*var(--u))]">
         <Link href="/" className="transition-opacity hover:opacity-60">
           Home
