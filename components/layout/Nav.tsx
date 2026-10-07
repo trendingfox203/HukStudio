@@ -18,12 +18,10 @@ export default function Nav({
 
   if (pathname.startsWith("/admin")) return null;
 
-  const dark = pathname === "/portfolio";
-  const bg = dark ? "bg-black" : "bg-paper";
-  const text = dark ? "text-white" : "text-black";
+  const text = "text-black";
 
   return (
-    <header className={`relative z-50 ${bg}`}>
+    <header className="relative z-50 bg-paper">
       <div className="mx-auto flex max-w-[1800px] items-center justify-between px-6 py-8 md:px-12 lg:px-20 xl:pt-[calc(72*var(--u))] xl:pr-[calc(40*var(--u))] xl:pb-[calc(27*var(--u))] xl:pl-[calc(39*var(--u))]">
         <Link
           href="/"
@@ -35,7 +33,7 @@ export default function Nav({
             alt=""
             width={36}
             height={36}
-            className={`shrink-0 xl:h-[calc(63*var(--u))] xl:w-[calc(63*var(--u))] ${dark ? "invert" : ""}`}
+            className="shrink-0 xl:h-[calc(63*var(--u))] xl:w-[calc(63*var(--u))]"
           />
           {siteName}
         </Link>
@@ -73,7 +71,7 @@ export default function Nav({
       </div>
 
       {open && (
-        <div className={`relative flex flex-col items-center gap-6 ${bg} px-6 py-10 lg:hidden`}>
+        <div className="relative flex flex-col items-center gap-6 bg-paper px-6 py-10 lg:hidden">
           {navLinks.map((link) => (
             <Link
               key={link.href}

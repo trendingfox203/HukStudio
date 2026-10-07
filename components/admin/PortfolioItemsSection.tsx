@@ -10,7 +10,6 @@ import {
   updatePortfolioItem,
   deletePortfolioItem,
   reorderPortfolioItems,
-  type PortfolioCategory,
 } from "@/app/admin/(protected)/portfolio/actions";
 
 type Item = {
@@ -21,21 +20,13 @@ type Item = {
   external_url: string;
 };
 
-export default function PortfolioCategorySection({
-  category,
-  heading,
-  items,
-}: {
-  category: PortfolioCategory;
-  heading: string;
-  items: Item[];
-}) {
+// Trang Portfolio công khai chỉ còn 1 lưới ảnh duy nhất, không chia nhóm —
+// nên khu quản trị cũng chỉ còn 1 danh sách phẳng, kéo-thả để đổi thứ tự.
+export default function PortfolioItemsSection({ items }: { items: Item[] }) {
   return (
     <section className="flex flex-col gap-4">
-      <h2 className="font-display text-lg text-ink">{heading}</h2>
-
       {items.length === 0 ? (
-        <p className="text-sm text-ink/50">Chưa có project nào trong nhóm này.</p>
+        <p className="text-sm text-ink/50">Chưa có project nào.</p>
       ) : (
         <SortableGrid
           items={items.map((item) => ({
@@ -46,7 +37,7 @@ export default function PortfolioCategorySection({
                 alt={item.name}
                 label={item.name}
                 externalUrl={item.external_url}
-                aspect="aspect-[3/5]"
+                aspect="aspect-[4/5]"
                 deleteAction={deletePortfolioItem.bind(null, item.id)}
                 editSlot={
                   <EditDialog
@@ -82,7 +73,6 @@ export default function PortfolioCategorySection({
           Thêm project mới
         </h3>
         <ActionForm action={addPortfolioItem} submitLabel="Thêm project" pendingLabel="Đang tải lên...">
-          <input type="hidden" name="category" value={category} />
           <ImageUploadField />
           <TextInput label="Tên project" name="name" placeholder="Vd: Felicia & Markus" required />
           <TextInput label="Venue" name="venue" placeholder="Vd: Ritz-Carlton, Bali" />

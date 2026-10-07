@@ -107,14 +107,12 @@ export default function PostActionBar({
         <button type="button" onClick={goToComments} aria-label="Xem bình luận" className={`${btn} w-auto gap-2 px-4 text-sm font-medium`}>
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path
-              d="M6.5 4A2.5 2.5 0 0 0 4 6.5v6A2.5 2.5 0 0 0 6.5 15H7v3.2a.6.6 0 0 0 .98.46L11.8 15h5.7A2.5 2.5 0 0 0 20 12.5v-6A2.5 2.5 0 0 0 17.5 4h-11Z"
+              d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"
               stroke="currentColor"
-              strokeWidth="1.5"
+              strokeWidth="1.6"
+              strokeLinecap="round"
               strokeLinejoin="round"
             />
-            <circle cx="8.3" cy="9.5" r="1" fill="currentColor" />
-            <circle cx="12" cy="9.5" r="1" fill="currentColor" />
-            <circle cx="15.7" cy="9.5" r="1" fill="currentColor" />
           </svg>
           <span>{commentCount}</span>
         </button>

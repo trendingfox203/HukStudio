@@ -31,7 +31,11 @@ export default function DesktopFrame({
 
     function recompute() {
       if (!el) return;
-      const vw = window.innerWidth;
+      // document.documentElement.clientWidth (không phải window.innerWidth) —
+      // clientWidth loại trừ độ rộng thanh cuộn dọc, nếu dùng innerWidth thì
+      // nội dung đúc khối sẽ rộng hơn vùng hiển thị thật và bị thanh cuộn che
+      // mất một phần rìa phải (icon, chữ ở sát mép).
+      const vw = document.documentElement.clientWidth;
       const nextScale = vw >= FREEZE_FROM ? vw / DESIGN_WIDTH : 1;
       setScale(nextScale);
       setWrapperHeight(nextScale === 1 ? undefined : el.offsetHeight * nextScale);

@@ -59,19 +59,19 @@ export const weddingGalleries: ProjectItem[] = [
     name: "Sophia & Daniel",
     imageId: "1669651970700-9ed6098002d5",
     alt: "Sophia and Daniel wedding gallery",
-    galleryUrl: picTimeUrl("sophia-daniel"),
+    galleryUrl: "https://hukstudio.pic-time.com/COclWB0xG1IzL",
   },
   {
     name: "Ava & Lucas",
     imageId: "1539357521934-197bc014f047",
     alt: "Ava and Lucas wedding gallery",
-    galleryUrl: picTimeUrl("ava-lucas"),
+    galleryUrl: "https://hukstudio.pic-time.com/ey9nUuRm3FtRc",
   },
   {
     name: "Isabella & Ethan",
     imageId: "1533417020304-c785906cd8f9",
     alt: "Isabella and Ethan wedding gallery",
-    galleryUrl: picTimeUrl("isabella-ethan"),
+    galleryUrl: "https://hukstudio.pic-time.com/0hCcZdFlYVhZi",
   },
   {
     name: "Mia & Noah",

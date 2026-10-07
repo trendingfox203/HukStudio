@@ -10,19 +10,15 @@ export const metadata: Metadata = { title: "Quản trị — Tổng quan" };
 
 async function getCounts() {
   const client = db();
-  const [home, press, galleries, editorials, reviews, posts] = await Promise.all([
+  const [home, portfolio, posts] = await Promise.all([
     client.query("select count(*) from home_images"),
-    client.query("select count(*) from portfolio_items where category = 'press'"),
-    client.query("select count(*) from portfolio_items where category = 'galleries'"),
-    client.query("select count(*) from portfolio_items where category = 'editorials'"),
-    client.query("select count(*) from portfolio_reviews"),
+    client.query("select count(*) from portfolio_items"),
     client.query("select count(*) from blog_posts"),
   ]);
 
   return {
     home: Number(home.rows[0].count),
-    portfolio: Number(press.rows[0].count) + Number(galleries.rows[0].count) + Number(editorials.rows[0].count),
-    reviews: Number(reviews.rows[0].count),
+    portfolio: Number(portfolio.rows[0].count),
     posts: Number(posts.rows[0].count),
   };
 }
@@ -35,7 +31,6 @@ export default async function AdminDashboardPage() {
   const stats = [
     { label: "Ảnh trang Home", value: counts.home, href: "/admin/home", icon: ImagesIcon },
     { label: "Project Portfolio", value: counts.portfolio, href: "/admin/portfolio", icon: PortfolioIcon },
-    { label: "Reviews", value: counts.reviews, href: "/admin/portfolio#reviews", icon: PortfolioIcon },
     { label: "Bài viết Blog", value: counts.posts, href: "/admin/blog", icon: BlogIcon },
   ];
 
@@ -88,7 +83,7 @@ export default async function AdminDashboardPage() {
         <Card>
           <h2 className="font-display text-lg text-ink">Portfolio</h2>
           <p className="mt-1 text-sm text-ink/60">
-            Quản lý ảnh nền Hero, các project theo từng nhóm và review khách hàng.
+            Quản lý các project theo từng nhóm hiển thị trong lưới ảnh Portfolio.
           </p>
           <Link
             href="/admin/portfolio"

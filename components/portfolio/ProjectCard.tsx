@@ -10,10 +10,12 @@ export type DisplayProjectItem = {
   galleryUrl: string;
 };
 
+// Kích thước & kiểu chữ đối chiếu trực tiếp từ erichmcvey.com/work: thẻ ảnh
+// tỉ lệ 4:5, chữ tên nằm giữa ảnh (không phải phía dưới), nền chữ be nhạt mờ.
 export default function ProjectCard({ item }: { item: DisplayProjectItem }) {
   return (
     <ExternalLink href={item.galleryUrl} className="group block">
-      <div className="relative aspect-[3/5] overflow-hidden">
+      <div className="relative aspect-[4/5] overflow-hidden">
         <Image
           src={item.imageSrc}
           alt={item.alt}
@@ -22,11 +24,13 @@ export default function ProjectCard({ item }: { item: DisplayProjectItem }) {
           quality={90}
           className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center px-6">
-          <div className="bg-white/60 px-6 py-3 text-center backdrop-blur-[2px]">
-            <p className="font-serif text-sm tracking-[0.15em] text-ink uppercase">{item.name}</p>
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+          <div className="bg-[#F8F5F2]/55 px-5 py-2.5 text-center">
+            <p className="font-serif text-[13px] font-light tracking-[0.14em] text-[#6F625C] uppercase">
+              {item.name}
+            </p>
             {item.venue && (
-              <p className="mt-1 font-serif text-xs tracking-[0.1em] text-ink/70 uppercase">
+              <p className="mt-1 font-serif text-[11px] font-light tracking-[0.12em] text-[#6F625C]/80 uppercase">
                 {item.venue}
               </p>
             )}
