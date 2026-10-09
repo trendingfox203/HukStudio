@@ -1,7 +1,7 @@
 import Image from "next/image";
-import Link from "next/link";
 import type { AboutSettings } from "@/lib/site-settings";
 import AboutHeadlineStack from "@/components/about/AboutHeadlineStack";
+import Breadcrumb from "@/components/common/Breadcrumb";
 
 const PORTRAIT_ALT = "Portrait of HUK, wedding photographer";
 
@@ -10,13 +10,10 @@ const PORTRAIT_ALT = "Portrait of HUK, wedding photographer";
 export default function AboutHero({ about }: { about: AboutSettings }) {
   return (
     <div className="px-6 pt-8 pb-20 sm:px-10 sm:pt-10 lg:px-20 xl:px-[calc(39*var(--u))] xl:pt-0 xl:pb-0 xl:mb-32">
-      <nav className="mb-10 flex items-center gap-2 font-gilroy text-base text-ink sm:mb-14 xl:mb-[calc(107*var(--u))] xl:gap-[calc(21*var(--u))] xl:text-[calc(16.5*var(--u))] xl:leading-[calc(20*var(--u))]">
-        <Link href="/" className="transition-opacity hover:opacity-60">
-          Home
-        </Link>
-        <span aria-hidden="true">&gt;</span>
-        <span>About</span>
-      </nav>
+      <Breadcrumb
+        items={[{ label: "Home", href: "/" }, { label: "About" }]}
+        className="mb-10 sm:mb-14 xl:mb-[calc(107*var(--u))]"
+      />
 
       <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-16 xl:mx-auto xl:w-[calc(923*var(--u))] xl:items-end xl:justify-between xl:gap-0">
         <div className="relative mx-auto aspect-[4/5] w-full max-w-md shrink-0 lg:mx-0 lg:w-[42%] xl:aspect-[471/598] xl:w-[calc(471*var(--u))] xl:max-w-none">

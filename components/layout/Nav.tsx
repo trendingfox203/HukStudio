@@ -43,7 +43,7 @@ export default function Nav({
             <Link
               key={link.href}
               href={link.href}
-              className={`text-lg font-aboreto font-normal tracking-[0.2em] xl:text-[calc(28*var(--u))] xl:tracking-[0.035em]  ${text} uppercase transition-opacity hover:opacity-70 ${pathname === link.href ? "opacity-100" : "opacity-80"
+              className={`text-lg font-aboreto font-normal tracking-[0.2em] xl:text-[calc(24*var(--u))] xl:tracking-[0.035em]  ${text} uppercase transition-opacity hover:opacity-70 ${pathname === link.href ? "opacity-100" : "opacity-80"
                 }`}
             >
               {link.label}

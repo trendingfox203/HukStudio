@@ -1,6 +1,6 @@
 import Image from "next/image";
-import Link from "next/link";
 import ContactFormSection from "@/components/contact/ContactFormSection";
+import Breadcrumb from "@/components/common/Breadcrumb";
 
 export default function ContactHero({
   bannerUrl,
@@ -13,13 +13,7 @@ export default function ContactHero({
 }) {
   return (
     <div className="px-6 pt-8 sm:px-10 sm:pt-10 lg:px-20">
-      <nav className="flex items-center gap-2 font-valencia-light text-base text-ink/50">
-        <Link href="/" className="transition-colors hover:text-ink">
-          Home
-        </Link>
-        <span>&gt;</span>
-        <span className="text-ink">Contact</span>
-      </nav>
+      <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Contact" }]} />
 
       <div className="mt-10 flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-16">
         <div className="relative aspect-[4/5] w-full shrink-0 lg:w-1/2">

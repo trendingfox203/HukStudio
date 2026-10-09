@@ -32,7 +32,7 @@ export default function AboutFooterBand({
 
         <div className="flex items-center gap-3 text-[#9a9a9a] xl:mt-[calc(2*var(--u))] xl:gap-[calc(23*var(--u))]">
           <a href={`mailto:${contactEmail}`} aria-label="Email" className="transition-opacity hover:opacity-60">
-            <MailIcon className="xl:h-[calc(55.6*var(--u))] xl:w-[calc(55.6*var(--u))]" />
+            <MailIcon className="xl:h-[calc(52*var(--u))] xl:w-[calc(52*var(--u))]" />
           </a>
           <a
             href={instagramUrl}
@@ -41,7 +41,7 @@ export default function AboutFooterBand({
             aria-label="Instagram"
             className="transition-opacity hover:opacity-60"
           >
-            <InstagramIcon className="xl:h-[calc(40.8*var(--u))] xl:w-[calc(40.8*var(--u))]" />
+            <InstagramIcon className="xl:h-[calc(44*var(--u))] xl:w-[calc(44*var(--u))]" />
           </a>
           <a
             href={whatsappLink(whatsappPhone)}
@@ -50,7 +50,7 @@ export default function AboutFooterBand({
             aria-label="WhatsApp"
             className="transition-opacity hover:opacity-60"
           >
-            <WhatsAppIcon className="xl:h-[calc(43*var(--u))] xl:w-[calc(43*var(--u))]" />
+            <WhatsAppIcon className="xl:h-[calc(44*var(--u))] xl:w-[calc(44*var(--u))]" />
           </a>
         </div>
       </div>
