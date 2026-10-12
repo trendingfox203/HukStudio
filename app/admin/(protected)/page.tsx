@@ -83,7 +83,7 @@ export default async function AdminDashboardPage() {
         <Card>
           <h2 className="font-display text-lg text-ink">Portfolio</h2>
           <p className="mt-1 text-sm text-ink/60">
-            Quản lý các project theo từng nhóm hiển thị trong lưới ảnh Portfolio.
+            Quản lý các ảnh hiển thị trong lưới ảnh Portfolio — kéo-thả để đổi thứ tự.
           </p>
           <Link
             href="/admin/portfolio"
@@ -119,7 +119,7 @@ export default async function AdminDashboardPage() {
         <Card>
           <h2 className="font-display text-lg text-ink">Trang Contact</h2>
           <p className="mt-1 text-sm text-ink/60">
-            Địa chỉ, SĐT, mạng xã hội, đoạn giới thiệu và ảnh trang Contact.
+            Ảnh lớn, nội dung form, địa chỉ, SĐT và mạng xã hội.
           </p>
           <Link
             href="/admin/contact"

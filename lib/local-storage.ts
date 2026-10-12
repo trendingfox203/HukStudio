@@ -13,12 +13,20 @@ function parseAspectRatio(value?: string): number | null {
   return w / h;
 }
 
+type ProcessedImage = { buffer: Buffer; ext: "jpg" | "png"; contentType: "image/jpeg" | "image/png" };
+
 async function processImage(
   original: Buffer,
   maxDimension: number,
   aspectRatio?: string,
-): Promise<Buffer> {
+): Promise<ProcessedImage> {
   const ratio = parseAspectRatio(aspectRatio);
+  // Ảnh đã tách nền (vd PNG trong suốt) giữ nguyên định dạng PNG để giữ nền
+  // trong suốt đó — nếu nén sang JPEG (không hỗ trợ alpha) phần trong suốt sẽ
+  // tự động bị "flatten" (tô nền đen theo mặc định của sharp, hoặc trắng nếu
+  // ép). Ảnh thường (không có alpha) vẫn nén JPEG cho nhẹ như trước.
+  const hasAlpha = (await sharp(original).metadata()).hasAlpha ?? false;
+
   let pipeline = sharp(original).rotate();
   pipeline = ratio
     ? pipeline.resize({
@@ -28,18 +36,24 @@ async function processImage(
         position: "attention",
       })
     : pipeline.resize({ width: maxDimension, height: maxDimension, fit: "inside", withoutEnlargement: true });
-  return pipeline.jpeg({ quality: JPEG_QUALITY }).toBuffer();
+
+  if (hasAlpha) {
+    const buffer = await pipeline.png({ compressionLevel: 9 }).toBuffer();
+    return { buffer, ext: "png", contentType: "image/png" };
+  }
+  const buffer = await pipeline.jpeg({ quality: JPEG_QUALITY }).toBuffer();
+  return { buffer, ext: "jpg", contentType: "image/jpeg" };
 }
 
 async function saveToBucket(
-  optimized: Buffer,
+  optimized: ProcessedImage,
   folder: Folder,
 ): Promise<{ path: string; publicUrl: string }> {
-  const relativePath = `${folder}/${crypto.randomUUID()}.jpg`;
+  const relativePath = `${folder}/${crypto.randomUUID()}.${optimized.ext}`;
 
-  const blob = await put(relativePath, optimized, {
+  const blob = await put(relativePath, optimized.buffer, {
     access: "public",
-    contentType: "image/jpeg",
+    contentType: optimized.contentType,
     addRandomSuffix: false,
   });
 

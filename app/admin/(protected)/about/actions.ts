@@ -29,10 +29,7 @@ export async function updateAboutContent(
 ): Promise<ActionState> {
   const heading = String(formData.get("heading") ?? "").trim();
   const paragraphsRaw = String(formData.get("paragraphs") ?? "");
-  const exploreLabel = String(formData.get("exploreLabel") ?? "").trim();
   const headlinesRaw = String(formData.get("headlines") ?? "");
-  const closingBold = String(formData.get("closingBold") ?? "").trim();
-  const closingItalic = String(formData.get("closingItalic") ?? "").trim();
 
   const paragraphs = parseParagraphs(paragraphsRaw);
   const headlines = parseHeadlines(headlinesRaw);
@@ -56,12 +53,12 @@ export async function updateAboutContent(
     await upsertSetting("about", {
       heading,
       paragraphs,
-      exploreLabel,
+      exploreLabel: prev.exploreLabel,
       portraitUrl,
       portraitStoragePath,
       headlines,
-      closingBold,
-      closingItalic,
+      closingBold: prev.closingBold,
+      closingItalic: prev.closingItalic,
     });
   } catch {
     return { error: "Lưu thất bại. Vui lòng thử lại." };

@@ -35,12 +35,6 @@ export default async function AdminAboutPage() {
             required
           />
 
-          <TextInput
-            label="Nhãn nút (vd: Explore More)"
-            name="exploreLabel"
-            defaultValue={about.exploreLabel}
-          />
-
           <div className="flex items-center gap-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -66,18 +60,6 @@ export default async function AdminAboutPage() {
               .join("\n")}
             hint="Ví dụ: About HUK | Wedding Photographer, Vietnam"
             required
-          />
-
-          <TextArea
-            label="Đoạn chốt (in đậm)"
-            name="closingBold"
-            defaultValue={about.closingBold}
-          />
-
-          <TextInput
-            label="Đoạn chốt (in nghiêng)"
-            name="closingItalic"
-            defaultValue={about.closingItalic}
           />
         </ActionForm>
       </Card>

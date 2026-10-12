@@ -5,13 +5,6 @@ import { deleteFromBucket, resolveUploadedImage } from "@/lib/local-storage";
 import type { ActionState } from "@/components/admin/ActionForm";
 import { getContactSettings, upsertSetting } from "@/lib/site-settings";
 
-function parseParagraphs(raw: string): string[] {
-  return raw
-    .split(/\n\s*\n/)
-    .map((paragraph) => paragraph.trim())
-    .filter(Boolean);
-}
-
 function parseLines(raw: string): string[] {
   return raw
     .split("\n")
@@ -19,25 +12,27 @@ function parseLines(raw: string): string[] {
     .filter(Boolean);
 }
 
+// Trang Contact công khai giờ chỉ còn: 1 ảnh lớn (banner) + form, và dải thông
+// tin liên hệ bên dưới (xem components/contact/ContactHero.tsx) — không còn
+// đoạn giới thiệu hay 3 ảnh chân dung nhỏ nữa, nên form quản trị bỏ các mục đó.
+// Dữ liệu cũ (introParagraphs/photos) vẫn được giữ nguyên trong DB, chỉ không
+// còn chỗ nào hiển thị hay chỉnh sửa được nữa.
 export async function updateContactContent(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-  const introRaw = String(formData.get("introParagraphs") ?? "");
   const addressRaw = String(formData.get("address") ?? "");
   const phone = String(formData.get("phone") ?? "").trim();
   const google = String(formData.get("google") ?? "").trim();
   const instagram = String(formData.get("instagram") ?? "").trim();
   const pinterest = String(formData.get("pinterest") ?? "").trim();
   const formLabel = String(formData.get("formLabel") ?? "").trim();
-  const formHeadline = String(formData.get("formHeadline") ?? "").trim();
   const formSubtitle = String(formData.get("formSubtitle") ?? "").trim();
 
-  const introParagraphs = parseParagraphs(introRaw);
   const addressLines = parseLines(addressRaw);
 
-  if (introParagraphs.length === 0 || addressLines.length === 0 || !phone) {
-    return { error: "Vui lòng nhập đầy đủ đoạn giới thiệu, địa chỉ và số điện thoại." };
+  if (addressLines.length === 0 || !phone) {
+    return { error: "Vui lòng nhập đầy đủ địa chỉ và số điện thoại." };
   }
 
   const infoColumns = [
@@ -50,15 +45,6 @@ export async function updateContactContent(
 
   try {
     const prev = await getContactSettings();
-    const photos = [...prev.photos];
-
-    for (let i = 0; i < 3; i++) {
-      const uploaded = await resolveUploadedImage(formData, `photo${i + 1}`, "contact");
-      if (uploaded) {
-        if (photos[i]?.storagePath) await deleteFromBucket(photos[i].storagePath!);
-        photos[i] = { url: uploaded.publicUrl, storagePath: uploaded.path };
-      }
-    }
 
     let banner = prev.banner;
     const uploadedBanner = await resolveUploadedImage(formData, "banner", "contact", undefined, 2400);
@@ -68,12 +54,12 @@ export async function updateContactContent(
     }
 
     await upsertSetting("contact", {
-      introParagraphs,
+      introParagraphs: prev.introParagraphs,
       infoColumns,
       formLabel,
-      formHeadline,
+      formHeadline: prev.formHeadline,
       formSubtitle,
-      photos,
+      photos: prev.photos,
       banner,
     });
   } catch {
